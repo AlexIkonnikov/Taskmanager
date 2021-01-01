@@ -5,9 +5,11 @@ import {returnFormMarkup} from './components/form.js';
 import {returnCartMarkup, COUNT_CARTS} from './components/cart.js';
 import {returnButtonMarkup} from './components/button.js';
 import {generateFilters} from './mock/filter.js';
+import {generateTasks, generateTask} from './mock/task.js';
 
 const filters = generateFilters();
-
+const task = generateTask();
+const tasks = generateTasks(COUNT_CARTS);
 const renderMarkup = (markup, pool, position = `beforeend`) => {
   pool.insertAdjacentHTML(position, markup);
 };
@@ -19,9 +21,9 @@ renderMarkup(returnMenuMarkup(), poolForMenu);
 renderMarkup(returnFiltersMarkup(filters), mainPool);
 renderMarkup(returnBoardMarkup(), mainPool);
 const board = mainPool.querySelector(`.board`);
-const tasks = mainPool.querySelector(`.board__tasks`);
-renderMarkup(returnFormMarkup(), tasks);
+const tasksPlace = mainPool.querySelector(`.board__tasks`);
+renderMarkup(returnFormMarkup(task), tasksPlace);
 for (let i = 0; i < COUNT_CARTS; i++) {
-  renderMarkup(returnCartMarkup(), tasks);
+  renderMarkup(returnCartMarkup(tasks[i]), tasksPlace);
 }
 renderMarkup(returnButtonMarkup(), board);
