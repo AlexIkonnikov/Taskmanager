@@ -3,23 +3,22 @@ import {formatTime} from '../utils';
 
 const returnFormMarkup = (task) => {
   const {discription, dueDate, color, repeatingDays, isRepeating} = task;
-  const isRepeatingTask = Object.values(repeatingDays).some(Boolean);
-  const repeatingClass = isRepeatingTask ? `card--repeat` : ``;
-  const isDateShowing = !!dueDate && !isRepeatingTask;
+  const repeatingClass = isRepeating ? `card--repeat` : ``;
+  const isDateShowing = !!dueDate && !isRepeating;
   const date = isDateShowing ? `${dueDate.getDate()} ${mounths[dueDate.getMonth()]}` :  ``;
   const time = isDateShowing ? formatTime(dueDate) : ``;
 
   const returnColorsMarkup = (colors, activeColor) => {
-  return colors.map((it) => { return(`<input
+  return colors.map((it, index) => { return(`<input
     type="radio"
-    id="color-${it}-4"
+    id="color-${it}-${index}"
     class="card__color-input card__color-input--${it} visually-hidden"
     name="color"
     value="${it}"
     ${activeColor === it ? `checked` : ``}
     />
     <label
-      for="color-${it}-4"
+      for="color-${it}-${index}"
       class="card__color card__color--${it}"
       >${it}</label
     >`)}).join(`\n`);
@@ -83,9 +82,9 @@ const returnFormMarkup = (task) => {
               </fieldset>` : ``
               }
               <button class="card__repeat-toggle" type="button">
-                repeat:<span class="card__repeat-status">${isRepeatingTask ? 'yes' : 'no'}</span>
+                repeat:<span class="card__repeat-status">${isRepeating ? 'yes' : 'no'}</span>
               </button>
-              ${isRepeatingTask ?  `
+              ${isRepeating ?  `
               <fieldset class="card__repeat-days">
                 <div class="card__repeat-days-inner">
                   ${returnRepeatDaysMarkup(days, repeatingDays)}

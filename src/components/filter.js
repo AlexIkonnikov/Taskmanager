@@ -1,3 +1,5 @@
+import {typeTask} from '../mock/filter';
+
 const returnFilterMarkup = (filter, isChecked) => {
   const {name, count} = filter;
   return (

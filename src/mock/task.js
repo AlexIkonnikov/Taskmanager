@@ -1,7 +1,7 @@
 const tasks = [`Изучить теорию`, `Сделать домашку`, `Пройти интенсив на соточку`];
 const days = [`mo`, `tu`, `we`, `th`, `fr`, `sa`, `su`];
 const repeatingDays = {
-  mo: true,
+  mo: false,
   tu: false,
   we: false,
   th: false,
@@ -34,7 +34,7 @@ const generateTask = () => {
     repeatingDays,
     isArchive: Math.random() > 0.5,
     isFavorite: Math.random() > 0.5,
-    isRepeating: Math.random() > 0.5,
+    isRepeating: Object.values(repeatingDays).some(Boolean),
   };
 };
 
