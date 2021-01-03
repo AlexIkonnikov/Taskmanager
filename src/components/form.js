@@ -26,24 +26,24 @@ const returnFormMarkup = (task) => {
 
   const returnRepeatDaysMarkup = (days, repeatingDays) => {
     return days
-    .map((it) => {
+    .map((it, index) => {
       return(
       `<input
         class="visually-hidden card__repeat-day-input"
         type="checkbox"
-        id="repeat-${it}-4"
+        id="repeat-${it}-${index}"
         name="repeat"
         value="${it}"
         ${repeatingDays[it] ? `checked` : ``}
         />
-        <label class="card__repeat-day" for="repeat-${it}-4"
+        <label class="card__repeat-day" for="repeat-${it}-${index}"
           >${it}</label
         >`);
     }).join(`\n`);
   };
 
   return (
-    `<article class="card card--edit card--black ${repeatingClass}">
+    `<article class="card card--edit card--${color} ${repeatingClass}">
     <form class="card__form" method="get">
       <div class="card__inner">
         <div class="card__color-bar">
@@ -97,7 +97,7 @@ const returnFormMarkup = (task) => {
           <div class="card__colors-inner">
             <h3 class="card__colors-title">Color</h3>
             <div class="card__colors-wrap">
-              ${returnColorsMarkup(colors, `black`)}
+              ${returnColorsMarkup(colors, color)}
             </div>
           </div>
         </div>

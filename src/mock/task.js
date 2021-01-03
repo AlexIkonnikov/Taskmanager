@@ -1,7 +1,7 @@
 const tasks = [`Изучить теорию`, `Сделать домашку`, `Пройти интенсив на соточку`];
 const days = [`mo`, `tu`, `we`, `th`, `fr`, `sa`, `su`];
 const repeatingDays = {
-  mo: false,
+  mo: Math.random() > 0.5,
   tu: false,
   we: false,
   th: false,
