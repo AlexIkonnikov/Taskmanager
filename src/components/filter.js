@@ -1,4 +1,4 @@
-import {typeTask} from '../mock/filter';
+import {createElement} from "../utils";
 
 const returnFilterMarkup = (filter, isChecked) => {
   const {name, count} = filter;
@@ -26,4 +26,25 @@ const returnFiltersMarkup = (filter) => {
   );
 };
 
-export {returnFiltersMarkup};
+export default class Filter {
+  constructor(filter) {
+    this._filter = filter;
+    this._element = null;
+  }
+
+  getMarkup () {
+    return returnFiltersMarkup(this._filter);
+  }
+
+  getElement () {
+    if (!this._element) {
+      this._element = createElement(this.getMarkup());
+    }
+    return this._element;
+  }
+
+  removeElement () {
+    this._element = null;
+  }
+
+}

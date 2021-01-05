@@ -1,11 +1,11 @@
-import {formatTime} from '../utils';
+import {createElement, formatTime} from '../utils';
 import {mounths} from '../mock/task';
 
 const COUNT_CARTS = 20;
 const returnCartMarkup = (tasks) => {
   const {discription, dueDate, color, isArchive, isFavorite, isRepeating} = tasks;
   const isDateShowing = !!dueDate && !isRepeating;
-  const date = isDateShowing ? `${dueDate.getDate()} ${mounths[dueDate.getMonth()]}` :  ``;
+  const date = isDateShowing ? `${dueDate.getDate()} ${mounths[dueDate.getMonth()]}` : ``;
   const time = isDateShowing ? formatTime(dueDate) : ``;
   const deadLineClass = dueDate && dueDate < Date.now() && !isRepeating ? `card--deadline` : ``;
   const disabledClass = `card__btn--disabled`;
@@ -36,7 +36,7 @@ const returnCartMarkup = (tasks) => {
           <p class="card__text">${discription}</p>
         </div>
         ${isDateShowing ?
-        `<div class="card__settings">
+      `<div class="card__settings">
           <div class="card__details">
             <div class="card__dates">
               <div class="card__date-deadline">
@@ -48,7 +48,7 @@ const returnCartMarkup = (tasks) => {
             </div>
           </div>
         </div>`
-        : ``}
+      : ``}
 
       </div>
     </div>
@@ -56,4 +56,27 @@ const returnCartMarkup = (tasks) => {
   );
 };
 
-export {returnCartMarkup, COUNT_CARTS};
+export {COUNT_CARTS};
+
+
+export default class Cart {
+  constructor (task) {
+    this._task = task;
+    this._element = null;
+  }
+
+  getMarkup () {
+    return returnCartMarkup(this._task);
+  }
+
+  getElement () {
+    if (!this._element) {
+      this._element = createElement(this.getMarkup());
+    }
+    return this._element;
+  }
+
+  removeElement () {
+    this._element = null;
+  }
+}

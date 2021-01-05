@@ -1,44 +1,47 @@
 import {colors, mounths, days} from '../mock/task';
-import {formatTime} from '../utils';
+import {createElement, formatTime} from '../utils';
 
 const returnFormMarkup = (task) => {
   const {discription, dueDate, color, repeatingDays, isRepeating} = task;
   const repeatingClass = isRepeating ? `card--repeat` : ``;
   const isDateShowing = !!dueDate && !isRepeating;
-  const date = isDateShowing ? `${dueDate.getDate()} ${mounths[dueDate.getMonth()]}` :  ``;
+  const date = isDateShowing ? `${dueDate.getDate()} ${mounths[dueDate.getMonth()]}` : ``;
   const time = isDateShowing ? formatTime(dueDate) : ``;
 
-  const returnColorsMarkup = (colors, activeColor) => {
-  return colors.map((it, index) => { return(`<input
-    type="radio"
-    id="color-${it}-${index}"
-    class="card__color-input card__color-input--${it} visually-hidden"
-    name="color"
-    value="${it}"
-    ${activeColor === it ? `checked` : ``}
-    />
-    <label
-      for="color-${it}-${index}"
-      class="card__color card__color--${it}"
-      >${it}</label
-    >`)}).join(`\n`);
+  const returnColorsMarkup = (colorsArray, activeColor) => {
+    return colorsArray.map((it, index) => {
+      return (`<input
+      type="radio"
+      id="color-${it}-${index}"
+      class="card__color-input card__color-input--${it} visually-hidden"
+      name="color"
+      value="${it}"
+      ${activeColor === it ? `checked` : ``}
+      />
+      <label
+        for="color-${it}-${index}"
+        class="card__color card__color--${it}"
+        >${it}</label
+      >`);
+    })
+    .join(`\n`);
   };
 
-  const returnRepeatDaysMarkup = (days, repeatingDays) => {
-    return days
+  const returnRepeatDaysMarkup = (daysArray, repeatingDaysArray) => {
+    return daysArray
     .map((it, index) => {
-      return(
-      `<input
-        class="visually-hidden card__repeat-day-input"
-        type="checkbox"
-        id="repeat-${it}-${index}"
-        name="repeat"
-        value="${it}"
-        ${repeatingDays[it] ? `checked` : ``}
-        />
-        <label class="card__repeat-day" for="repeat-${it}-${index}"
-          >${it}</label
-        >`);
+      return (
+        `<input
+          class="visually-hidden card__repeat-day-input"
+          type="checkbox"
+          id="repeat-${it}-${index}"
+          name="repeat"
+          value="${it}"
+          ${repeatingDaysArray[it] ? `checked` : ``}
+          />
+          <label class="card__repeat-day" for="repeat-${it}-${index}"
+            >${it}</label
+          >`);
     }).join(`\n`);
   };
 
@@ -69,7 +72,7 @@ const returnFormMarkup = (task) => {
                 date: <span class="card__date-status">${isDateShowing ? `yes` : `no`}</span>
               </button>
               ${isDateShowing ?
-              `<fieldset class="card__date-deadline">
+      `<fieldset class="card__date-deadline">
                 <label class="card__input-deadline-wrap">
                   <input
                     class="card__date"
@@ -79,12 +82,12 @@ const returnFormMarkup = (task) => {
                     value="${date} ${time}"
                   />
                 </label>
-              </fieldset>` : ``
-              }
+        </fieldset>` : ``
+    }
               <button class="card__repeat-toggle" type="button">
-                repeat:<span class="card__repeat-status">${isRepeating ? 'yes' : 'no'}</span>
+                repeat:<span class="card__repeat-status">${isRepeating ? `yes` : `no`}</span>
               </button>
-              ${isRepeating ?  `
+              ${isRepeating ? `
               <fieldset class="card__repeat-days">
                 <div class="card__repeat-days-inner">
                   ${returnRepeatDaysMarkup(days, repeatingDays)}
@@ -112,4 +115,24 @@ const returnFormMarkup = (task) => {
   );
 };
 
-export {returnFormMarkup};
+export default class Form {
+  constructor (task) {
+    this._task = task;
+    this._element = null;
+  }
+
+  getMarkup () {
+    return returnFormMarkup(this._task);
+  }
+
+  getElement () {
+    if (!this._element) {
+      this._element = createElement(this.getMarkup());
+    }
+    return this._element;
+  }
+
+  removeElement () {
+    this._element = null;
+  }
+}

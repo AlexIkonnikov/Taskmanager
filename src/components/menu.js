@@ -1,3 +1,4 @@
+import {createElement} from '../utils';
 
 const returnMenuMarkup = () => {
   return (
@@ -32,4 +33,19 @@ const returnMenuMarkup = () => {
   );
 };
 
-export {returnMenuMarkup};
+export default class Menu {
+  getMarkup () {
+    return returnMenuMarkup();
+  }
+
+  getElement () {
+    if (!this._element) {
+      this._element = createElement(this.getMarkup());
+    }
+    return this._element;
+  }
+
+  removeElement () {
+    this._element = null;
+  }
+};

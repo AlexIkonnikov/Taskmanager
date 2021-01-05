@@ -1,5 +1,3 @@
-
-import {COUNT_CARTS} from '../components/cart';
 import {tasks} from '../main';
 
 let typeTask = {
@@ -15,10 +13,10 @@ const filtersNames = [
   `all`, `overdue`, `today`, `favorites`, `repeating`, `archive`
 ];
 
-const countNumberTasks = (tasks) => {
+const countNumberTasks = (tasksArray) => {
   let date = new Date();
 
-  tasks.map((it) => {
+  tasksArray.map((it) => {
     if (it.isArchive) {
       typeTask.archive.push(it);
     } else {
@@ -34,7 +32,7 @@ const countNumberTasks = (tasks) => {
       typeTask.overdue.push(it);
     }
 
-    if (it.dueDate && it.dueDate.getFullYear() == date.getFullYear() && it.dueDate.getMonth() == date.getMonth() && it.dueDate.getDate() == date.getDate()) {
+    if (it.dueDate && it.dueDate.getFullYear() === date.getFullYear() && it.dueDate.getMonth() === date.getMonth() && it.dueDate.getDate() === date.getDate()) {
       typeTask.today.push(it);
     }
   });

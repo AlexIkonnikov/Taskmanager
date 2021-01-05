@@ -1,15 +1,17 @@
-import {returnMenuMarkup} from './components/menu.js';
-import {returnFiltersMarkup} from './components/filter.js';
-import {returnBoardMarkup} from './components/board-filter.js';
-import {returnFormMarkup} from './components/form.js';
-import {returnCartMarkup, COUNT_CARTS} from './components/cart.js';
-import {returnButtonMarkup} from './components/button.js';
+import Menu from './components/menu.js';
+import Filter from './components/filter.js';
+import FilterList from './components/board-filter.js';
+import Form from './components/form.js';
+import Cart ,{COUNT_CARTS} from './components/cart.js';
+import Button from './components/button.js';
 import {generateFilters} from './mock/filter.js';
-import {generateTasks, generateTask} from './mock/task.js';
+import {generateTasks} from './mock/task.js';
+import {render} from './utils';
 
 const START_NUMBER_TASKS = 8;
 const tasks = generateTasks(COUNT_CARTS);
 const filters = generateFilters();
+
 const renderMarkup = (markup, pool, position = `beforeend`) => {
   pool.insertAdjacentHTML(position, markup);
 };
@@ -17,27 +19,57 @@ const renderMarkup = (markup, pool, position = `beforeend`) => {
 const mainPool = document.querySelector(`.main`);
 const poolForMenu = mainPool.querySelector(`.main__control`);
 
-renderMarkup(returnMenuMarkup(), poolForMenu);
-renderMarkup(returnFiltersMarkup(filters, tasks), mainPool);
-renderMarkup(returnBoardMarkup(), mainPool);
+
+render(poolForMenu, new Menu().getElement(), `beforebegin`);
+render(mainPool, new Filter(filters).getElement(), `beforebegin`);
+render(mainPool, new FilterList().getElement(), `beforebegin`);
+
 const board = mainPool.querySelector(`.board`);
 const tasksPlace = mainPool.querySelector(`.board__tasks`);
 
-renderMarkup(returnFormMarkup(tasks[0]), tasksPlace);
-let showingTasks = START_NUMBER_TASKS;
-for (let i = 1; i < START_NUMBER_TASKS; i++) {
-  renderMarkup(returnCartMarkup(tasks[i]), tasksPlace);
-}
+const renderTasks = (placeToCarts, task) => {
+  const cartTask = new Cart(task);
+  const editButton = cartTask.getElement().querySelector(`.card__btn--edit`);
 
-renderMarkup(returnButtonMarkup(), board);
+  const form = new Form(task);
+  const editForm = form.getElement().querySelector(`form`);
+
+  const replaceCartToForm = () => {
+    placeToCarts.replaceChild(form.getElement(), cartTask.getElement());
+    console.log(`меняю карточку на форму`);
+  };
+
+  const replaceFormToCart = (evt) => {
+    evt.preventDefault();
+    placeToCarts.replaceChild(cartTask.getElement(), form.getElement());
+  };
+
+
+  editButton.addEventListener(`click`, replaceCartToForm);
+  editForm.addEventListener(`submit`, replaceFormToCart);
+
+  render(placeToCarts, cartTask.getElement(), `beforebegin`);
+};
+
+
+let showingTasks = START_NUMBER_TASKS;
+
+tasks.slice(0, START_NUMBER_TASKS).forEach((it) => {
+  renderTasks(tasksPlace, it);
+});
+
+render(board, new Button().getElement(), `beforebegin`);
+
 const loadMoreButton = document.querySelector(`.load-more`);
 
 loadMoreButton.addEventListener(`click`, () => {
   const onViewCarts = showingTasks;
   showingTasks += START_NUMBER_TASKS;
+
   tasks.slice(onViewCarts, showingTasks).forEach((it) => {
-    renderMarkup(returnCartMarkup(it), tasksPlace);
+    renderTasks(tasksPlace, it);
   });
+
   if (showingTasks >= tasks.length) {
     loadMoreButton.remove();
   }

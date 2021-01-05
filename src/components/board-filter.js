@@ -1,3 +1,5 @@
+import {createElement} from "../utils";
+
 const returnBoardMarkup = () => {
   return (
     `<section class="board container">
@@ -11,4 +13,19 @@ const returnBoardMarkup = () => {
   );
 };
 
-export {returnBoardMarkup};
+export default class FilterList {
+  getMarkup () {
+    return returnBoardMarkup();
+  }
+
+  getElement () {
+    if (!this._element) {
+      this._element = createElement(this.getMarkup());
+    }
+    return this._element;
+  }
+
+  removeElement () {
+    this._element = null;
+  }
+}
