@@ -5,6 +5,7 @@ const returnFormMarkup = (task) => {
   const {discription, dueDate, color, repeatingDays, isRepeating} = task;
   const repeatingClass = isRepeating ? `card--repeat` : ``;
   const isDateShowing = !!dueDate && !isRepeating;
+  const deadLineClass = dueDate && dueDate < Date.now() && !isRepeating ? `card--deadline` : ``;
   const date = isDateShowing ? `${dueDate.getDate()} ${mounths[dueDate.getMonth()]}` : ``;
   const time = isDateShowing ? formatTime(dueDate) : ``;
 
@@ -46,7 +47,7 @@ const returnFormMarkup = (task) => {
   };
 
   return (
-    `<article class="card card--edit card--${color} ${repeatingClass}">
+    `<article class="card card--edit card--${color} ${repeatingClass} ${deadLineClass}">
     <form class="card__form" method="get">
       <div class="card__inner">
         <div class="card__color-bar">

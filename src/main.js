@@ -2,8 +2,9 @@ import Menu from './components/menu.js';
 import Filter from './components/filter.js';
 import FilterList from './components/board-filter.js';
 import Form from './components/form.js';
-import Cart ,{COUNT_CARTS} from './components/cart.js';
+import Cart, {COUNT_CARTS} from './components/cart.js';
 import Button from './components/button.js';
+import noTaskView from './components/no-task';
 import {generateFilters} from './mock/filter.js';
 import {generateTasks} from './mock/task.js';
 import {render} from './utils';
@@ -11,10 +12,6 @@ import {render} from './utils';
 const START_NUMBER_TASKS = 8;
 const tasks = generateTasks(COUNT_CARTS);
 const filters = generateFilters();
-
-const renderMarkup = (markup, pool, position = `beforeend`) => {
-  pool.insertAdjacentHTML(position, markup);
-};
 
 const mainPool = document.querySelector(`.main`);
 const poolForMenu = mainPool.querySelector(`.main__control`);
@@ -34,16 +31,22 @@ const renderTasks = (placeToCarts, task) => {
   const form = new Form(task);
   const editForm = form.getElement().querySelector(`form`);
 
+  const onEscDown = (evt) => {
+    if (evt.keyCode === 27) {
+      placeToCarts.replaceChild(cartTask.getElement(), form.getElement());
+      document.removeEventListener(`keydown`, onEscDown);
+    }
+  };
+
   const replaceCartToForm = () => {
     placeToCarts.replaceChild(form.getElement(), cartTask.getElement());
-    console.log(`меняю карточку на форму`);
+    document.addEventListener('keydown', onEscDown);
   };
 
   const replaceFormToCart = (evt) => {
     evt.preventDefault();
     placeToCarts.replaceChild(cartTask.getElement(), form.getElement());
   };
-
 
   editButton.addEventListener(`click`, replaceCartToForm);
   editForm.addEventListener(`submit`, replaceFormToCart);
@@ -54,9 +57,13 @@ const renderTasks = (placeToCarts, task) => {
 
 let showingTasks = START_NUMBER_TASKS;
 
-tasks.slice(0, START_NUMBER_TASKS).forEach((it) => {
-  renderTasks(tasksPlace, it);
-});
+if (tasks.length < 1) {
+  render(tasksPlace, new noTaskView().getElement(), `beforebegin`);
+} else {
+  tasks.slice(0, START_NUMBER_TASKS).forEach((it) => {
+    renderTasks(tasksPlace, it);
+  });
+}
 
 render(board, new Button().getElement(), `beforebegin`);
 

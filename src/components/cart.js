@@ -73,6 +73,7 @@ export default class Cart {
     if (!this._element) {
       this._element = createElement(this.getMarkup());
     }
+    console.log(this._element);
     return this._element;
   }
 
