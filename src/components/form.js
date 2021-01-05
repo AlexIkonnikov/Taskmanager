@@ -117,23 +117,23 @@ const returnFormMarkup = (task) => {
 };
 
 export default class Form {
-  constructor (task) {
+  constructor(task) {
     this._task = task;
     this._element = null;
   }
 
-  getMarkup () {
+  getMarkup() {
     return returnFormMarkup(this._task);
   }
 
-  getElement () {
+  getElement() {
     if (!this._element) {
       this._element = createElement(this.getMarkup());
     }
     return this._element;
   }
 
-  removeElement () {
+  removeElement() {
     this._element = null;
   }
 }

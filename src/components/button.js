@@ -8,11 +8,11 @@ const returnButtonMarkup = () => {
 
 export default class Button {
 
-  getMarkup () {
+  getMarkup() {
     return returnButtonMarkup();
   }
 
-  getElement () {
+  getElement() {
     if (!this._element) {
       this._element = createElement(this.getMarkup());
     }
@@ -20,7 +20,7 @@ export default class Button {
     return this._element;
   }
 
-  removeElement () {
+  removeElement() {
     this._element = null;
   }
 }

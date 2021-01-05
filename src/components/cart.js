@@ -60,24 +60,23 @@ export {COUNT_CARTS};
 
 
 export default class Cart {
-  constructor (task) {
+  constructor(task) {
     this._task = task;
     this._element = null;
   }
 
-  getMarkup () {
+  getMarkup() {
     return returnCartMarkup(this._task);
   }
 
-  getElement () {
+  getElement() {
     if (!this._element) {
       this._element = createElement(this.getMarkup());
     }
-    console.log(this._element);
     return this._element;
   }
 
-  removeElement () {
+  removeElement() {
     this._element = null;
   }
 }

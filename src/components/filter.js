@@ -32,19 +32,18 @@ export default class Filter {
     this._element = null;
   }
 
-  getMarkup () {
+  getMarkup() {
     return returnFiltersMarkup(this._filter);
   }
 
-  getElement () {
+  getElement() {
     if (!this._element) {
       this._element = createElement(this.getMarkup());
     }
     return this._element;
   }
 
-  removeElement () {
+  removeElement() {
     this._element = null;
   }
-
 }

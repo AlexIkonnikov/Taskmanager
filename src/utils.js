@@ -20,7 +20,7 @@ const createElement = (markup) => {
 const RenderPosition = {
   AFTERBEGIN: `afterbegin`,
   BEFOREBEGIN: `beforebegin`,
-}
+};
 
 const render = (parent, element, position) => {
   switch (position) {

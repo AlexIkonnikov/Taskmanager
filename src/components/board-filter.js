@@ -14,18 +14,18 @@ const returnBoardMarkup = () => {
 };
 
 export default class FilterList {
-  getMarkup () {
+  getMarkup() {
     return returnBoardMarkup();
   }
 
-  getElement () {
+  getElement() {
     if (!this._element) {
       this._element = createElement(this.getMarkup());
     }
     return this._element;
   }
 
-  removeElement () {
+  removeElement() {
     this._element = null;
   }
 }

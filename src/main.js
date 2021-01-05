@@ -4,7 +4,7 @@ import FilterList from './components/board-filter.js';
 import Form from './components/form.js';
 import Cart, {COUNT_CARTS} from './components/cart.js';
 import Button from './components/button.js';
-import noTaskView from './components/no-task';
+import NoTaskView from './components/no-task';
 import {generateFilters} from './mock/filter.js';
 import {generateTasks} from './mock/task.js';
 import {render} from './utils';
@@ -40,7 +40,7 @@ const renderTasks = (placeToCarts, task) => {
 
   const replaceCartToForm = () => {
     placeToCarts.replaceChild(form.getElement(), cartTask.getElement());
-    document.addEventListener('keydown', onEscDown);
+    document.addEventListener(`keydown`, onEscDown);
   };
 
   const replaceFormToCart = (evt) => {
@@ -58,7 +58,7 @@ const renderTasks = (placeToCarts, task) => {
 let showingTasks = START_NUMBER_TASKS;
 
 if (tasks.length < 1) {
-  render(tasksPlace, new noTaskView().getElement(), `beforebegin`);
+  render(tasksPlace, new NoTaskView().getElement(), `beforebegin`);
 } else {
   tasks.slice(0, START_NUMBER_TASKS).forEach((it) => {
     renderTasks(tasksPlace, it);

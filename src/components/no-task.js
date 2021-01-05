@@ -4,8 +4,8 @@ const returnElementMarkup = () => {
   return (`<p class="board__no-tasks">Click «ADD NEW TASK» in menu to create your first task</p>`);
 };
 
-export default class noTaskView {
-  constructor () {
+export default class NoTaskView {
+  constructor() {
     this._element = null;
   }
 
@@ -13,7 +13,7 @@ export default class noTaskView {
     return returnElementMarkup();
   }
 
-  getElement () {
+  getElement() {
     if (!this._element) {
       this._element = createElement(this.getMarkup());
     }
@@ -21,7 +21,7 @@ export default class noTaskView {
     return this._element;
   }
 
-  removeElement () {
+  removeElement() {
     this._element = null;
   }
 }
