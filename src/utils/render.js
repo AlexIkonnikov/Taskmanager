@@ -9,18 +9,31 @@ const RenderPosition = {
   BEFOREBEGIN: `beforebegin`,
 };
 
-const render = (parent, element, position = RenderPosition.BEFOREBEGIN) => {
+const render = (parent, component, position = RenderPosition.BEFOREBEGIN) => {
   switch (position) {
     case RenderPosition.AFTERBEGIN:
-      parent.prepend(element);
+      parent.prepend(component.getElement());
       break;
     case RenderPosition.BEFOREBEGIN:
-      parent.append(element);
+      parent.append(component.getElement());
+      break;
   }
 };
 
-const replace = (parent, newElement, oldElement) => {
-  parent.replaceChild(newElement, oldElement);
+const replace = (newComponent, oldComponent) => {
+  const parentElement = oldComponent.getElement().parentElement;
+  const newElement = newComponent.getElement();
+  const oldElement = oldComponent.getElement();
+  const isExistElements = !!(parentElement && newElement && oldElement);
+
+  if (isExistElements && parentElement.contains(oldElement)) {
+    parentElement.replaceChild(newElement, oldElement);
+  }
 };
 
-export {createElement, render, replace};
+const remove = (component) => {
+  component.getElement().remove();
+  component.removeElement();
+};
+
+export {createElement, render, replace, remove};
