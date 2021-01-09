@@ -68,4 +68,8 @@ export default class Cart extends AbstractComponent {
   getMarkup() {
     return returnCartMarkup(this._task);
   }
+
+  setEditButtonClickHandler(cb) {
+    this.getElement().querySelector(`.card__btn--edit`).addEventListener('click', cb);
+  }
 }

@@ -126,4 +126,8 @@ export default class Form extends AbstractComponent {
   getMarkup() {
     return returnFormMarkup(this._task);
   }
+
+  setSubmitHandler(cb) {
+    this.getElement().querySelector(`form`).addEventListener('click', cb);
+  }
 }

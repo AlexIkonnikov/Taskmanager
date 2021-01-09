@@ -26,9 +26,7 @@ const tasksPlace = mainPool.querySelector(`.board__tasks`);
 
 const renderTasks = (placeToCarts, task) => {
   const cartTask = new Cart(task);
-  const editButton = cartTask.getElement().querySelector(`.card__btn--edit`);
   const form = new Form(task);
-  const editForm = form.getElement().querySelector(`form`);
 
   const onEscDown = (evt) => {
     if (evt.keyCode === 27) {
@@ -47,8 +45,8 @@ const renderTasks = (placeToCarts, task) => {
     replace(cartTask, form);
   };
 
-  editButton.addEventListener(`click`, replaceCartToForm);
-  editForm.addEventListener(`submit`, replaceFormToCart);
+  cartTask.setEditButtonClickHandler(replaceCartToForm);
+  form.setSubmitHandler(replaceFormToCart);
 
   render(placeToCarts, cartTask);
 };
@@ -67,7 +65,7 @@ if (tasks.length < 1) {
 const loadMoreButton = new Button();
 render(board, loadMoreButton);
 
-loadMoreButton.getElement().addEventListener(`click`, () => {
+loadMoreButton.setClickHandler(() => {
   const onViewCarts = showingTasks;
   showingTasks += START_NUMBER_TASKS;
 

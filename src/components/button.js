@@ -10,4 +10,8 @@ export default class Button extends AbstractComponent {
   getMarkup() {
     return returnButtonMarkup();
   }
+
+  setClickHandler(cb) {
+    this.getElement().addEventListener('click', cb);
+  }
 }
