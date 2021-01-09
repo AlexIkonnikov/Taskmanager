@@ -5,6 +5,7 @@ import Form from './components/form.js';
 import Cart, {COUNT_CARTS} from './components/cart.js';
 import Button from './components/button.js';
 import NoTaskView from './components/no-task';
+import BoardController from './controllers/board-controller';
 import {generateFilters} from './mock/filter.js';
 import {generateTasks} from './mock/task.js';
 import {render, replace, remove} from './utils/render';
