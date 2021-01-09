@@ -1,5 +1,6 @@
 import {colors, mounths, days} from '../mock/task';
-import {createElement, formatTime} from '../utils';
+import {formatTime} from '../utils';
+import AbstractComponent from './abstract-component';
 
 const returnFormMarkup = (task) => {
   const {discription, dueDate, color, repeatingDays, isRepeating} = task;
@@ -116,24 +117,13 @@ const returnFormMarkup = (task) => {
   );
 };
 
-export default class Form {
+export default class Form extends AbstractComponent {
   constructor(task) {
+    super();
     this._task = task;
-    this._element = null;
   }
 
   getMarkup() {
     return returnFormMarkup(this._task);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getMarkup());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

@@ -1,5 +1,6 @@
-import {createElement, formatTime} from '../utils';
+import {formatTime} from '../utils';
 import {mounths} from '../mock/task';
+import AbstractComponent from './abstract-component';
 
 const COUNT_CARTS = 20;
 const returnCartMarkup = (tasks) => {
@@ -58,25 +59,13 @@ const returnCartMarkup = (tasks) => {
 
 export {COUNT_CARTS};
 
-
-export default class Cart {
+export default class Cart extends AbstractComponent {
   constructor(task) {
+    super();
     this._task = task;
-    this._element = null;
   }
 
   getMarkup() {
     return returnCartMarkup(this._task);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getMarkup());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
