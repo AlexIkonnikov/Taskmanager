@@ -1,4 +1,4 @@
-import {createElement} from "../utils";
+import AbstractComponent from './abstract-component';
 
 const returnButtonMarkup = () => {
   return (
@@ -6,21 +6,8 @@ const returnButtonMarkup = () => {
   );
 };
 
-export default class Button {
-
+export default class Button extends AbstractComponent {
   getMarkup() {
     return returnButtonMarkup();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getMarkup());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

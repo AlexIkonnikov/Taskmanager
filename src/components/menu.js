@@ -1,4 +1,4 @@
-import {createElement} from '../utils';
+import AbstractComponent from './abstract-component';
 
 const returnMenuMarkup = () => {
   return (
@@ -33,19 +33,8 @@ const returnMenuMarkup = () => {
   );
 };
 
-export default class Menu {
+export default class Menu extends AbstractComponent {
   getMarkup() {
     return returnMenuMarkup();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getMarkup());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

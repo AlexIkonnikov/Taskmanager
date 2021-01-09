@@ -1,4 +1,4 @@
-import {createElement} from "../utils";
+import AbstractComponent from './abstract-component';
 
 const returnBoardMarkup = () => {
   return (
@@ -13,19 +13,8 @@ const returnBoardMarkup = () => {
   );
 };
 
-export default class FilterList {
+export default class FilterList extends AbstractComponent {
   getMarkup() {
     return returnBoardMarkup();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getMarkup());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
