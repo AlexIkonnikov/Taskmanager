@@ -1,0 +1,25 @@
+import {createElement} from '../utils';
+
+export default class AbstractComponent {
+  constructor() {
+    if (new.target === AbstractComponent) {
+      throw new Error(`Can't  intstantiate AbstractComponent, only concrete one`);
+    }
+    this._element = null;
+  }
+
+  getMarkup() {
+    throw new Error(`Abstract method not implemented: getMarkup`);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getMarkup());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
