@@ -1,5 +1,5 @@
 import {colors, mounths, days} from '../mock/task';
-import {formatTime} from '../utils';
+import {formatTime} from '../utils/common';
 import AbstractComponent from './abstract-component';
 
 const returnFormMarkup = (task) => {

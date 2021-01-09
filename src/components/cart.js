@@ -1,4 +1,4 @@
-import {formatTime} from '../utils';
+import {formatTime} from '../utils/common';
 import {mounths} from '../mock/task';
 import AbstractComponent from './abstract-component';
 
