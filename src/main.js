@@ -7,7 +7,7 @@ import Button from './components/button.js';
 import NoTaskView from './components/no-task';
 import {generateFilters} from './mock/filter.js';
 import {generateTasks} from './mock/task.js';
-import {render} from './utils';
+import {render, replace} from './utils/render';
 
 const START_NUMBER_TASKS = 8;
 const tasks = generateTasks(COUNT_CARTS);
@@ -17,9 +17,9 @@ const mainPool = document.querySelector(`.main`);
 const poolForMenu = mainPool.querySelector(`.main__control`);
 
 
-render(poolForMenu, new Menu().getElement(), `beforebegin`);
-render(mainPool, new Filter(filters).getElement(), `beforebegin`);
-render(mainPool, new FilterList().getElement(), `beforebegin`);
+render(poolForMenu, new Menu().getElement());
+render(mainPool, new Filter(filters).getElement());
+render(mainPool, new FilterList().getElement());
 
 const board = mainPool.querySelector(`.board`);
 const tasksPlace = mainPool.querySelector(`.board__tasks`);
@@ -33,39 +33,39 @@ const renderTasks = (placeToCarts, task) => {
 
   const onEscDown = (evt) => {
     if (evt.keyCode === 27) {
-      placeToCarts.replaceChild(cartTask.getElement(), form.getElement());
+      replace(placeToCarts, cartTask.getElement(), form.getElement());
       document.removeEventListener(`keydown`, onEscDown);
     }
   };
 
   const replaceCartToForm = () => {
-    placeToCarts.replaceChild(form.getElement(), cartTask.getElement());
+    replace(placeToCarts, form.getElement(), cartTask.getElement());
     document.addEventListener(`keydown`, onEscDown);
   };
 
   const replaceFormToCart = (evt) => {
     evt.preventDefault();
-    placeToCarts.replaceChild(cartTask.getElement(), form.getElement());
+    replace(placeToCarts, cartTask.getElement(), form.getElement());
   };
 
   editButton.addEventListener(`click`, replaceCartToForm);
   editForm.addEventListener(`submit`, replaceFormToCart);
 
-  render(placeToCarts, cartTask.getElement(), `beforebegin`);
+  render(placeToCarts, cartTask.getElement());
 };
 
 
 let showingTasks = START_NUMBER_TASKS;
 
 if (tasks.length < 1) {
-  render(tasksPlace, new NoTaskView().getElement(), `beforebegin`);
+  render(tasksPlace, new NoTaskView().getElement());
 } else {
   tasks.slice(0, START_NUMBER_TASKS).forEach((it) => {
     renderTasks(tasksPlace, it);
   });
 }
 
-render(board, new Button().getElement(), `beforebegin`);
+render(board, new Button().getElement());
 
 const loadMoreButton = document.querySelector(`.load-more`);
 
