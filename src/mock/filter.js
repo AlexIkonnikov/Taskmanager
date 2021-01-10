@@ -1,5 +1,3 @@
-import {tasks} from '../main';
-
 let typeTask = {
   all: [],
   overdue: [],
@@ -38,7 +36,7 @@ const countNumberTasks = (tasksArray) => {
   });
 };
 
-const generateFilters = () => {
+const generateFilters = (tasks) => {
   countNumberTasks(tasks);
   return filtersNames.map((it) => {
     return {
