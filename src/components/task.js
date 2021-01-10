@@ -59,7 +59,7 @@ const returnCartMarkup = (tasks) => {
 
 export {COUNT_CARTS};
 
-export default class Cart extends AbstractComponent {
+export default class Task extends AbstractComponent {
   constructor(task) {
     super();
     this._task = task;

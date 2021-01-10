@@ -1,11 +1,13 @@
+import Board from './components/board';
+import Tasks from "./components/tasks";
 import Menu from './components/menu.js';
 import Filter from './components/filter.js';
-import FilterList from './components/board-filter.js';
+import Sorting from './components/sorting.js';
 import Form from './components/form.js';
-import Cart, {COUNT_CARTS} from './components/cart.js';
+import Cart, {COUNT_CARTS} from './components/task.js';
 import Button from './components/button.js';
 import NoTaskView from './components/no-task';
-import BoardController from './controllers/board-controller';
+import BoardController from './controllers/board';
 import {generateFilters} from './mock/filter.js';
 import {generateTasks} from './mock/task.js';
 import {render, replace, remove} from './utils/render';
@@ -17,13 +19,17 @@ const filters = generateFilters();
 const mainPool = document.querySelector(`.main`);
 const poolForMenu = mainPool.querySelector(`.main__control`);
 
-
 render(poolForMenu, new Menu());
 render(mainPool, new Filter(filters));
-render(mainPool, new FilterList());
 
-const board = mainPool.querySelector(`.board`);
-const tasksPlace = mainPool.querySelector(`.board__tasks`);
+const board = new Board();
+
+render(mainPool, board);
+render(board.getElement(), new Sorting());
+
+const tasksBoard = new Tasks();
+
+render(board.getElement(), tasksBoard);
 
 const renderTasks = (placeToCarts, task) => {
   const cartTask = new Cart(task);
@@ -52,31 +58,36 @@ const renderTasks = (placeToCarts, task) => {
   render(placeToCarts, cartTask);
 };
 
+const renderBoard = (board, tasks) => {
 
-let showingTasks = START_NUMBER_TASKS;
 
-if (tasks.length < 1) {
-  render(tasksPlace, new NoTaskView());
-} else {
-  tasks.slice(0, START_NUMBER_TASKS).forEach((it) => {
-    renderTasks(tasksPlace, it);
-  });
-}
-
-const loadMoreButton = new Button();
-render(board, loadMoreButton);
-
-loadMoreButton.setClickHandler(() => {
-  const onViewCarts = showingTasks;
-  showingTasks += START_NUMBER_TASKS;
-
-  tasks.slice(onViewCarts, showingTasks).forEach((it) => {
-    renderTasks(tasksPlace, it);
-  });
-
-  if (showingTasks >= tasks.length) {
-    remove(loadMoreButton);
+  let showingTasks = START_NUMBER_TASKS;
+  if (tasks.length < 1) {
+    render(tasksPlace, new NoTaskView());
+  } else {
+    tasks.slice(0, START_NUMBER_TASKS).forEach((it) => {
+      renderTasks(tasksBoard.getElement(), it);
+    });
   }
-});
+
+  const loadMoreButton = new Button();
+  render(board, loadMoreButton);
+
+  loadMoreButton.setClickHandler(() => {
+    const onViewCarts = showingTasks;
+    showingTasks += START_NUMBER_TASKS;
+
+    tasks.slice(onViewCarts, showingTasks).forEach((it) => {
+      renderTasks(tasksBoard.getElement(), it);
+    });
+
+    if (showingTasks >= tasks.length) {
+      remove(loadMoreButton);
+    }
+  });
+};
+
+renderBoard(board.getElement(), tasks);
+
 
 export {tasks};
