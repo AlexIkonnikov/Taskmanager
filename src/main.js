@@ -16,6 +16,7 @@ render(poolForMenu, new Menu());
 render(mainPool, new Filter(filters));
 
 const board = new Board();
-render(mainPool, board);
 const boardContreller = new BoardController(board.getElement());
+
+render(mainPool, board);
 boardContreller.render(tasks);
