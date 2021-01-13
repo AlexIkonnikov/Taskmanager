@@ -35,19 +35,19 @@ const renderTasks = (placeToCarts, task) => {
   render(placeToCarts, cartTask);
 };
 
-const getSortedTasks = (tasks, sortType, from, to) => {
+const getSortedTasks = (tasks, sortType) => {
   let sortedTasks = [];
   const showingTasks = tasks.slice();
   switch (sortType) {
     case SortType.DATE_UP:
-      sortedTasks = showingTasks.sort((a, b) => b.dueDate - a.dueDate);
-      break;
-      case SortType.DATE_DOWN:
       sortedTasks = showingTasks.sort((a, b) => a.dueDate - b.dueDate);
       break;
-      case SortType.DEFAULT:
-        sortedTasks = showingTasks;
-        break;
+    case SortType.DATE_DOWN:
+      sortedTasks = showingTasks.sort((a, b) => b.dueDate - a.dueDate);
+      break;
+    case SortType.DEFAULT:
+      sortedTasks = showingTasks;
+      break;
   }
   return sortedTasks;
 };
@@ -69,6 +69,7 @@ export default class BoardController {
     render(this._container, tasksBoard);
     let showingTasks = START_NUMBER_TASKS;
     const isAllTaskArchived = tasks.every((task) => task.isArchived);
+
     if (isAllTaskArchived) {
       render(tasksBoard.getElement(), this._noTasksComponent);
       return;
@@ -78,30 +79,40 @@ export default class BoardController {
       });
     }
 
-    const loadMoreButton = this._loadMoreButton;
-    render(this._container, loadMoreButton);
-
-    loadMoreButton.setClickHandler(() => {
-      const onViewCarts = showingTasks;
-      showingTasks += START_NUMBER_TASKS;
-
-      tasks.slice(onViewCarts, showingTasks).forEach((it) => {
-        renderTasks(tasksBoard.getElement(), it);
-      });
+    const renderLoadMoreButton = () => {
 
       if (showingTasks >= tasks.length) {
-        remove(loadMoreButton);
+        return;
       }
-    });
+
+      render(this._container, this._loadMoreButton);
+
+      this._loadMoreButton.setClickHandler(() => {
+        const onViewCarts = showingTasks;
+        showingTasks += START_NUMBER_TASKS;
+
+        tasks.slice(onViewCarts, showingTasks).forEach((it) => {
+          renderTasks(tasksBoard.getElement(), it);
+        });
+
+        if (showingTasks >= tasks.length) {
+          remove(this._loadMoreButton);
+        }
+      });
+    };
+
+    renderLoadMoreButton();
+
     this._sorting.setSortTypeChangeHandler((sortType) => {
+
       tasksBoard.getElement().innerHTML = ``;
 
-      const sortedTasks = getSortedTasks(tasks, sortType, 0, START_NUMBER_TASKS);
+      const sortedTasks = getSortedTasks(tasks, sortType);
 
-      sortedTasks.slice(0, START_NUMBER_TASKS).forEach((it) => {
+      sortedTasks.slice(0, showingTasks).forEach((it) => {
         renderTasks(tasksBoard.getElement(), it);
       });
-      render(this._container, loadMoreButton);
+      renderLoadMoreButton();
     });
   }
 }

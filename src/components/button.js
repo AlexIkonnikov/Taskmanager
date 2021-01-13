@@ -12,6 +12,6 @@ export default class Button extends AbstractComponent {
   }
 
   setClickHandler(cb) {
-    this.getElement().addEventListener('click', cb);
+    this.getElement().addEventListener(`click`, cb);
   }
 }
