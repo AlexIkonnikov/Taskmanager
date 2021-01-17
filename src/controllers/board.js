@@ -37,27 +37,9 @@ const renderTasks = (placeToCarts, task) => {
   render(placeToCarts, cartTask);
 };
 
-const getSortedTasks = (tasks, sortType) => {
-  let sortedTasks = [];
-  const showingTasks = tasks.slice();
-  switch (sortType) {
-    case SortType.DATE_UP:
-      sortedTasks = showingTasks.sort((a, b) => a.dueDate - b.dueDate);
-      break;
-    case SortType.DATE_DOWN:
-      sortedTasks = showingTasks.sort((a, b) => b.dueDate - a.dueDate);
-      break;
-    case SortType.DEFAULT:
-      sortedTasks = showingTasks;
-      break;
-  }
-  return sortedTasks;
-};
-
 export default class BoardController {
   constructor(container) {
     this._container = container;
-
     this._noTasksComponent = new NoTaskView();
     this._sorting = new Sorting();
     this._taskBoardComponent = new Tasks();
@@ -65,7 +47,7 @@ export default class BoardController {
   }
 
   render(tasks) {
-
+    this.originalTasks =tasks.slice();
     render(this._container, this._sorting);
     const tasksBoard = this._taskBoardComponent;
     render(this._container, tasksBoard);
@@ -106,10 +88,24 @@ export default class BoardController {
 
     this._sorting.setSortTypeChangeHandler((sortType) => {
       tasksBoard.getElement().innerHTML = ``;
-      const sortedTasks = getSortedTasks(tasks, sortType);
+      const sortedTasks = this._getSortedTasks(tasks, sortType);
       sortedTasks.slice(0, START_NUMBER_TASKS).forEach((it) => {
         renderTasks(tasksBoard.getElement(), it);
       });
     });
   }
+
+  _getSortedTasks(tasks, sortType) {
+    switch (sortType) {
+      case SortType.DATE_UP:
+        tasks.sort((a, b) => a.dueDate - b.dueDate);
+        break;
+      case SortType.DATE_DOWN:
+        tasks.sort((a, b) => b.dueDate - a.dueDate);
+        break;
+      case SortType.DEFAULT:
+        return this.originalTasks;
+    }
+    return tasks;
+  };
 }
