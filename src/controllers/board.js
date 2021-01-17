@@ -6,7 +6,9 @@ import Button from '../components/button.js';
 import NoTaskView from '../components/no-task';
 import {render, replace, remove} from '../utils/render';
 
-const START_NUMBER_TASKS = 8;
+let START_NUMBER_TASKS = 8;
+let AFTER_CLICK_NUMBER_TASK = 8;
+
 
 const renderTasks = (placeToCarts, task) => {
   const cartTask = new Task(task);
@@ -67,7 +69,6 @@ export default class BoardController {
     render(this._container, this._sorting);
     const tasksBoard = this._taskBoardComponent;
     render(this._container, tasksBoard);
-    let showingTasks = START_NUMBER_TASKS;
     const isAllTaskArchived = tasks.every((task) => task.isArchived);
 
     if (isAllTaskArchived) {
@@ -81,21 +82,21 @@ export default class BoardController {
 
     const renderLoadMoreButton = () => {
 
-      if (showingTasks >= tasks.length) {
+      if (START_NUMBER_TASKS >= tasks.length) {
         return;
       }
 
       render(this._container, this._loadMoreButton);
 
       this._loadMoreButton.setClickHandler(() => {
-        const onViewCarts = showingTasks;
-        showingTasks += START_NUMBER_TASKS;
 
-        tasks.slice(onViewCarts, showingTasks).forEach((it) => {
+        tasks.slice(START_NUMBER_TASKS, START_NUMBER_TASKS + AFTER_CLICK_NUMBER_TASK).forEach((it) => {
           renderTasks(tasksBoard.getElement(), it);
         });
 
-        if (showingTasks >= tasks.length) {
+        START_NUMBER_TASKS += AFTER_CLICK_NUMBER_TASK;
+
+        if (START_NUMBER_TASKS >= tasks.length) {
           remove(this._loadMoreButton);
         }
       });
@@ -104,15 +105,11 @@ export default class BoardController {
     renderLoadMoreButton();
 
     this._sorting.setSortTypeChangeHandler((sortType) => {
-
       tasksBoard.getElement().innerHTML = ``;
-
       const sortedTasks = getSortedTasks(tasks, sortType);
-
-      sortedTasks.slice(0, showingTasks).forEach((it) => {
+      sortedTasks.slice(0, START_NUMBER_TASKS).forEach((it) => {
         renderTasks(tasksBoard.getElement(), it);
       });
-      renderLoadMoreButton();
     });
   }
 }
