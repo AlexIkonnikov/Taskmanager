@@ -128,6 +128,6 @@ export default class Form extends AbstractComponent {
   }
 
   setSubmitHandler(cb) {
-    this.getElement().querySelector(`form`).addEventListener(`click`, cb);
+    this.getElement().querySelector(`form`).addEventListener(`submit`, cb);
   }
 }

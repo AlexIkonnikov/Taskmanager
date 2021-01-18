@@ -9,34 +9,6 @@ import {render, replace, remove} from '../utils/render';
 let START_NUMBER_TASKS = 8;
 let AFTER_CLICK_NUMBER_TASK = 8;
 
-
-const renderTasks = (placeToCarts, task) => {
-  const cartTask = new Task(task);
-  const form = new Form(task);
-
-  const onEscDown = (evt) => {
-    if (evt.keyCode === 27) {
-      replace(cartTask, form);
-      document.removeEventListener(`keydown`, onEscDown);
-    }
-  };
-
-  const replaceCartToForm = () => {
-    replace(form, cartTask);
-    document.addEventListener(`keydown`, onEscDown);
-  };
-
-  const replaceFormToCart = (evt) => {
-    evt.preventDefault();
-    replace(cartTask, form);
-  };
-
-  cartTask.setEditButtonClickHandler(replaceCartToForm);
-  form.setSubmitHandler(replaceFormToCart);
-
-  render(placeToCarts, cartTask);
-};
-
 export default class BoardController {
   constructor(container) {
     this._container = container;
@@ -47,50 +19,28 @@ export default class BoardController {
   }
 
   render(tasks) {
-    this.originalTasks =tasks.slice();
-    render(this._container, this._sorting);
-    const tasksBoard = this._taskBoardComponent;
-    render(this._container, tasksBoard);
-    const isAllTaskArchived = tasks.every((task) => task.isArchived);
+    this._tasks = tasks;
+    this._originalTasks =tasks.slice();
 
+    render(this._container, this._sorting);
+    render(this._container, this._taskBoardComponent);
+
+    const isAllTaskArchived = tasks.every((task) => task.isArchived);
     if (isAllTaskArchived) {
-      render(tasksBoard.getElement(), this._noTasksComponent);
+      render(this._taskBoardComponent.getElement(), this._noTasksComponent);
       return;
     } else {
       tasks.slice(0, START_NUMBER_TASKS).forEach((it) => {
-        renderTasks(tasksBoard.getElement(), it);
+        this._renderTask(this._taskBoardComponent, it);
       });
     }
 
-    const renderLoadMoreButton = () => {
-
-      if (START_NUMBER_TASKS >= tasks.length) {
-        return;
-      }
-
-      render(this._container, this._loadMoreButton);
-
-      this._loadMoreButton.setClickHandler(() => {
-
-        tasks.slice(START_NUMBER_TASKS, START_NUMBER_TASKS + AFTER_CLICK_NUMBER_TASK).forEach((it) => {
-          renderTasks(tasksBoard.getElement(), it);
-        });
-
-        START_NUMBER_TASKS += AFTER_CLICK_NUMBER_TASK;
-
-        if (START_NUMBER_TASKS >= tasks.length) {
-          remove(this._loadMoreButton);
-        }
-      });
-    };
-
-    renderLoadMoreButton();
-
+    this._renderLoadMoreButton();
     this._sorting.setSortTypeChangeHandler((sortType) => {
-      tasksBoard.getElement().innerHTML = ``;
+      this._taskBoardComponent.getElement().innerHTML = ``;
       const sortedTasks = this._getSortedTasks(tasks, sortType);
       sortedTasks.slice(0, START_NUMBER_TASKS).forEach((it) => {
-        renderTasks(tasksBoard.getElement(), it);
+        this._renderTask(this._taskBoardComponent, it);
       });
     });
   }
@@ -104,8 +54,52 @@ export default class BoardController {
         tasks.sort((a, b) => b.dueDate - a.dueDate);
         break;
       case SortType.DEFAULT:
-        return this.originalTasks;
+        return this._originalTasks;
     }
     return tasks;
+  };
+
+  _renderTask(placeToCarts, task) {
+    const cartTask = new Task(task);
+    const form = new Form(task);
+
+    const onEscDown = (evt) => {
+      if (evt.keyCode === 27) {
+        replace(cartTask, form);
+        document.removeEventListener(`keydown`, onEscDown);
+      }
+    };
+
+    const replaceCartToForm = () => {
+      replace(form, cartTask);
+      document.addEventListener(`keydown`, onEscDown);
+    };
+
+    const replaceFormToCart = (evt) => {
+      evt.preventDefault();
+      replace(cartTask, form);
+    };
+
+    cartTask.setEditButtonClickHandler(replaceCartToForm);
+    form.setSubmitHandler(replaceFormToCart);
+    render(placeToCarts.getElement(), cartTask);
+  };
+
+  _renderLoadMoreButton() {
+    if (START_NUMBER_TASKS >= this._tasks.length) {
+      return;
+    }
+
+    render(this._container, this._loadMoreButton);
+    this._loadMoreButton.setClickHandler(() => {
+      this._tasks.slice(START_NUMBER_TASKS, START_NUMBER_TASKS + AFTER_CLICK_NUMBER_TASK).forEach((it) => {
+        this._renderTask(this._taskBoardComponent, it);
+      });
+
+      START_NUMBER_TASKS += AFTER_CLICK_NUMBER_TASK;
+      if (START_NUMBER_TASKS >= this._tasks.length) {
+        remove(this._loadMoreButton);
+      }
+    });
   };
 }
