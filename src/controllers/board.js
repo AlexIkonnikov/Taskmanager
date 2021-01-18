@@ -18,30 +18,33 @@ export default class BoardController {
     this._loadMoreButton = new Button();
   }
 
-  render(tasks) {
-    this._tasks = tasks;
-    this._originalTasks =tasks.slice();
-
+  _renderSorting() {
     render(this._container, this._sorting);
-    render(this._container, this._taskBoardComponent);
+  }
 
-    const isAllTaskArchived = tasks.every((task) => task.isArchived);
-    if (isAllTaskArchived) {
-      render(this._taskBoardComponent.getElement(), this._noTasksComponent);
+  _renderBoard() {
+    render(this._container, this._taskBoardComponent);
+  }
+
+  _renderNoTaskComponent() {
+    render(this._taskBoardComponent.getElement(), this._noTasksComponent);
+  }
+
+  _renderLoadMoreButton() {
+    if (START_NUMBER_TASKS >= this._tasks.length) {
       return;
-    } else {
-      tasks.slice(0, START_NUMBER_TASKS).forEach((it) => {
-        this._renderTask(this._taskBoardComponent, it);
-      });
     }
 
-    this._renderLoadMoreButton();
-    this._sorting.setSortTypeChangeHandler((sortType) => {
-      this._taskBoardComponent.getElement().innerHTML = ``;
-      const sortedTasks = this._getSortedTasks(tasks, sortType);
-      sortedTasks.slice(0, START_NUMBER_TASKS).forEach((it) => {
+    render(this._container, this._loadMoreButton);
+    this._loadMoreButton.setClickHandler(() => {
+      this._tasks.slice(START_NUMBER_TASKS, START_NUMBER_TASKS + AFTER_CLICK_NUMBER_TASK).forEach((it) => {
         this._renderTask(this._taskBoardComponent, it);
       });
+
+      START_NUMBER_TASKS += AFTER_CLICK_NUMBER_TASK;
+      if (START_NUMBER_TASKS >= this._tasks.length) {
+        remove(this._loadMoreButton);
+      }
     });
   }
 
@@ -57,7 +60,7 @@ export default class BoardController {
         return this._originalTasks;
     }
     return tasks;
-  };
+  }
 
   _renderTask(placeToCarts, task) {
     const cartTask = new Task(task);
@@ -83,23 +86,33 @@ export default class BoardController {
     cartTask.setEditButtonClickHandler(replaceCartToForm);
     form.setSubmitHandler(replaceFormToCart);
     render(placeToCarts.getElement(), cartTask);
-  };
+  }
 
-  _renderLoadMoreButton() {
-    if (START_NUMBER_TASKS >= this._tasks.length) {
-      return;
-    }
-
-    render(this._container, this._loadMoreButton);
-    this._loadMoreButton.setClickHandler(() => {
-      this._tasks.slice(START_NUMBER_TASKS, START_NUMBER_TASKS + AFTER_CLICK_NUMBER_TASK).forEach((it) => {
-        this._renderTask(this._taskBoardComponent, it);
-      });
-
-      START_NUMBER_TASKS += AFTER_CLICK_NUMBER_TASK;
-      if (START_NUMBER_TASKS >= this._tasks.length) {
-        remove(this._loadMoreButton);
-      }
+  _renderTasks(tasks) {
+    tasks.slice(0, START_NUMBER_TASKS).forEach((it) => {
+      this._renderTask(this._taskBoardComponent, it);
     });
-  };
+  }
+
+  render(tasks) {
+    this._tasks = tasks;
+    this._originalTasks =tasks.slice();
+    this._renderSorting();
+    this._renderBoard();
+
+    const isAllTaskArchived = tasks.every((task) => task.isArchived);
+    if (isAllTaskArchived) {
+      this._renderNoTaskComponent();
+      return;
+    } else {
+      this._renderTasks(tasks);
+    }
+    this._renderLoadMoreButton();
+
+    this._sorting.setSortTypeChangeHandler((sortType) => {
+      this._taskBoardComponent.getElement().innerHTML = ``;
+      const sortedTasks = this._getSortedTasks(this._tasks, sortType);
+      this._renderTasks(sortedTasks);
+    });
+  }
 }
