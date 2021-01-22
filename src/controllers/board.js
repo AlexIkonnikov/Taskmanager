@@ -52,24 +52,27 @@ export default class BoardController {
     });
   }
 
-  _getSortedTasks(tasks, sortType) {
+  _makeSorted(sortType) {
     switch (sortType) {
       case SortType.DATE_UP:
-        return tasks.sort((a, b) => a.dueDate - b.dueDate);
+        this._tasks.sort((a, b) => a.dueDate - b.dueDate);
+        break;
       case SortType.DATE_DOWN:
-        return tasks.sort((a, b) => b.dueDate - a.dueDate);
+        this._tasks.sort((a, b) => b.dueDate - a.dueDate);
+        break;
       default:
-       return  tasks = this._originTasks.slice();
+        this._tasks = this._originTasks.slice();
+        break;
     }
   }
 
   _onChangeSortType(sortType) {
+    START_NUMBER_TASKS = 8;
     remove(this._loadMoreButton);
     this._renderLoadMoreButton();
-    START_NUMBER_TASKS = 8;
     this._taskBoardComponent.getElement().innerHTML = ``;
-    const sortedTasks = this._getSortedTasks(this._tasks, sortType);
-    const newTasks = this._renderTasks(this._taskBoardComponent, sortedTasks.slice(0, START_NUMBER_TASKS), this._onDataChange);
+    this._makeSorted(sortType);
+    const newTasks = this._renderTasks(this._taskBoardComponent, this._tasks.slice(0, START_NUMBER_TASKS), this._onDataChange);
     this._showingTaskControllers = newTasks;
   }
 

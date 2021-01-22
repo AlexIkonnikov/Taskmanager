@@ -3,7 +3,7 @@ import {formatTime} from '../utils/common';
 import AbstractComponent from './abstract-component';
 
 const returnFormMarkup = (task) => {
-  const {discription, dueDate, color, repeatingDays, isRepeating} = task;
+  const {discription, dueDate, color, repeatingDays, isRepeating, isDateSet} = task;
   const repeatingClass = isRepeating ? `card--repeat` : ``;
   const isDateShowing = !!dueDate && !isRepeating;
   const deadLineClass = dueDate && dueDate < Date.now() && !isRepeating ? `card--deadline` : ``;
@@ -71,9 +71,9 @@ const returnFormMarkup = (task) => {
           <div class="card__details">
             <div class="card__dates">
               <button class="card__date-deadline-toggle" type="button">
-                date: <span class="card__date-status">${isDateShowing ? `yes` : `no`}</span>
+                date: <span class="card__date-status">${isDateSet && !isRepeating ? `yes` : `no`}</span>
               </button>
-              ${isDateShowing ?
+              ${isDateSet && !isRepeating ?
       `<fieldset class="card__date-deadline">
                 <label class="card__input-deadline-wrap">
                   <input
@@ -129,5 +129,13 @@ export default class Form extends AbstractComponent {
 
   setSubmitHandler(cb) {
     this.getElement().querySelector(`form`).addEventListener(`submit`, cb);
+  }
+
+  setButtonRepeatClick(cb) {
+    this.getElement().querySelector(`.card__repeat-toggle`).addEventListener(`click`, cb);
+  }
+
+  setButtonDateClick(cb) {
+    this.getElement().querySelector(`.card__date-deadline-toggle`).addEventListener(`click`, cb);
   }
 }

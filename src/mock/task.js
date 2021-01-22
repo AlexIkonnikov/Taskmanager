@@ -25,13 +25,21 @@ const generateRandomDate = () => {
   return dateTime;
 };
 
+let i = 0;
+const generateId = () => {
+  i++;
+  return i;
+}
+
 const generateTask = () => {
   const dueDate = Math.random() > 0.5 ? null : generateRandomDate();
   return {
+    id: generateId(),
     discription: tasks[Math.floor(Math.random() * tasks.length)],
     dueDate,
     color: colors[Math.floor(Math.random() * colors.length)],
     repeatingDays,
+    isDateSet: dueDate instanceof Date,
     isArchive: Math.random() > 0.5,
     isFavorite: Math.random() > 0.5,
     isRepeating: Object.values(repeatingDays).some(Boolean),

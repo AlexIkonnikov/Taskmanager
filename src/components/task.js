@@ -4,7 +4,7 @@ import AbstractComponent from './abstract-component';
 
 const COUNT_CARTS = 20;
 const returnCartMarkup = (tasks) => {
-  const {discription, dueDate, color, isArchive, isFavorite, isRepeating} = tasks;
+  const {id, discription, dueDate, color, isArchive, isFavorite, isRepeating, isDateSet} = tasks;
   const isDateShowing = !!dueDate && !isRepeating;
   const date = isDateShowing ? `${dueDate.getDate()} ${mounths[dueDate.getMonth()]}` : ``;
   const time = isDateShowing ? formatTime(dueDate) : ``;
@@ -12,7 +12,7 @@ const returnCartMarkup = (tasks) => {
   const disabledClass = `card__btn--disabled`;
 
   return (
-    `<article class="card card--${color} ${isRepeating ? `card--repeat` : ``}  ${deadLineClass}">
+    `<article class="card ${id} card--${color} ${isRepeating ? `card--repeat` : ``}  ${deadLineClass}">
     <div class="card__form">
       <div class="card__inner">
         <div class="card__control">
@@ -36,7 +36,7 @@ const returnCartMarkup = (tasks) => {
         <div class="card__textarea-wrap">
           <p class="card__text">${discription}</p>
         </div>
-        ${isDateShowing ?
+        ${isDateSet ?
       `<div class="card__settings">
           <div class="card__details">
             <div class="card__dates">
