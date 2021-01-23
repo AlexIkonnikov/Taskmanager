@@ -1,6 +1,6 @@
 import {colors, mounths, days} from '../mock/task';
 import {formatTime} from '../utils/common';
-import AbstractComponent from './abstract-component';
+import SmartComponent from './smart';
 
 const returnFormMarkup = (task) => {
   const {discription, dueDate, color, repeatingDays, isRepeating, isDateSet} = task;
@@ -117,25 +117,50 @@ const returnFormMarkup = (task) => {
   );
 };
 
-export default class Form extends AbstractComponent {
+export default class Form extends SmartComponent {
   constructor(task) {
     super();
     this._task = task;
+    this._submitHandler = null;
+    this.subscribeOnEvents();
+  }
+
+  rerender() {
+    super.rerender();
   }
 
   getMarkup() {
     return returnFormMarkup(this._task);
   }
 
+  recoveryListners() {
+    this.setSubmitHandler(this._submitHandler);
+    this.subscribeOnEvents();
+  }
+
+  subscribeOnEvents() {
+    const element = this.getElement();
+
+    element.querySelector(`.card__repeat-toggle`).addEventListener(`click`, () => {
+      this._task.isRepeating = !this._task.isRepeating;
+      this.rerender();
+    });
+
+    element.querySelector(`.card__date-deadline-toggle`).addEventListener(`click`, () => {
+      this._task.isDateSet = !this._task.isDateSet;
+      this.rerender();
+    });
+
+    element.querySelectorAll(`.card__color-input`).forEach((it) => {
+      it.addEventListener(`change`, (evt) => {
+        this._task.color = evt.target.value;
+        this.rerender();
+      });
+    });
+  }
+
   setSubmitHandler(cb) {
     this.getElement().querySelector(`form`).addEventListener(`submit`, cb);
-  }
-
-  setButtonRepeatClick(cb) {
-    this.getElement().querySelector(`.card__repeat-toggle`).addEventListener(`click`, cb);
-  }
-
-  setButtonDateClick(cb) {
-    this.getElement().querySelector(`.card__date-deadline-toggle`).addEventListener(`click`, cb);
+    this._submitHandler = cb;
   }
 }

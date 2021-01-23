@@ -1,11 +1,9 @@
 import {render, replace, remove} from '../utils/render';
 import Form from '../components/form.js';
 import Task from '../components/task.js';
-import AbstractComponent from '../components/abstract-component';
 
-export default class TaskController extends AbstractComponent {
+export default class TaskController {
   constructor(container, onDataChange) {
-    super();
     this._container = container;
 
     this._taskComponent = null;
@@ -46,16 +44,9 @@ export default class TaskController extends AbstractComponent {
     this._taskComponent.setArchiveButtonClick(() => {
       this._onDataChange(this, task, Object.assign({}, task, {isArchive: !task.isArchive}));
     });
+
     this._taskComponent.setFavoritesButtonClick(() => {
       this._onDataChange(this, task, Object.assign({}, task, {isFavorite: !task.isFavorite}));
-    });
-
-    this._formComponent.setButtonDateClick(() => {
-      this._onDataChange(this, task, Object.assign({}, task, {isDateSet: !task.isDateSet}));
-    });
-
-    this._formComponent.setButtonRepeatClick(() => {
-      this._onDataChange(this, task, Object.assign({}, task, {isRepeating: !task.isRepeating}));
     });
 
     if (oldTaskComponent && oldFormComponent) {
