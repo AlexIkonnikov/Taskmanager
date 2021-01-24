@@ -6,9 +6,9 @@ const returnFormMarkup = (task) => {
   const {discription, dueDate, color, repeatingDays, isRepeating, isDateSet} = task;
   const repeatingClass = isRepeating ? `card--repeat` : ``;
   const isDateShowing = !!dueDate && !isRepeating;
-  const deadLineClass = dueDate && dueDate < Date.now() && !isRepeating ? `card--deadline` : ``;
   const date = isDateShowing ? `${dueDate.getDate()} ${mounths[dueDate.getMonth()]}` : ``;
   const time = isDateShowing ? formatTime(dueDate) : ``;
+  const deadLineClass = dueDate && dueDate < Date.now() && !isRepeating ? `card--deadline` : ``;
 
   const returnColorsMarkup = (colorsArray, activeColor) => {
     return colorsArray.map((it, index) => {

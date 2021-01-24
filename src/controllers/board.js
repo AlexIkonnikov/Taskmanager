@@ -20,6 +20,7 @@ export default class BoardController {
     this._loadMoreButton = new Button();
     this._onChangeSortType = this._onChangeSortType.bind(this);
     this._onDataChange = this._onDataChange.bind(this);
+    this._onChangeView = this._onChangeView.bind(this);
   }
 
   _renderSorting() {
@@ -42,7 +43,7 @@ export default class BoardController {
     render(this._container, this._loadMoreButton);
     this._loadMoreButton.setClickHandler(() => {
 
-      const newTasks = this._renderTasks(this._taskBoardComponent, this._tasks.slice(START_NUMBER_TASKS, START_NUMBER_TASKS + AFTER_CLICK_NUMBER_TASK), this._onDataChange);
+      const newTasks = this._renderTasks(this._taskBoardComponent, this._tasks.slice(START_NUMBER_TASKS, START_NUMBER_TASKS + AFTER_CLICK_NUMBER_TASK), this._onDataChange, this._onChangeView);
       this._showingTaskControllers = this._showingTaskControllers.concat(newTasks);
 
       START_NUMBER_TASKS += AFTER_CLICK_NUMBER_TASK;
@@ -72,13 +73,13 @@ export default class BoardController {
     this._renderLoadMoreButton();
     this._taskBoardComponent.getElement().innerHTML = ``;
     this._makeSorted(sortType);
-    const newTasks = this._renderTasks(this._taskBoardComponent, this._tasks.slice(0, START_NUMBER_TASKS), this._onDataChange);
+    const newTasks = this._renderTasks(this._taskBoardComponent, this._tasks.slice(0, START_NUMBER_TASKS), this._onDataChange, this._onChangeView);
     this._showingTaskControllers = newTasks;
   }
 
-  _renderTasks(placeToCarts, tasks, onDataChange) {
+  _renderTasks(placeToCarts, tasks, onDataChange, onViewChange) {
     return tasks.map((task) => {
-      const taskController = new TaskController(placeToCarts, onDataChange);
+      const taskController = new TaskController(placeToCarts, onDataChange, onViewChange);
       taskController.render(task);
       return taskController;
     });
@@ -93,6 +94,10 @@ export default class BoardController {
     taskController.render(this._tasks[index]);
   }
 
+  _onChangeView() {
+    this._showingTaskControllers.forEach((it) => it.setDefaultView());
+  }
+
   render(tasks) {
     this._tasks = tasks;
     this._originTasks = tasks.slice();
@@ -105,7 +110,7 @@ export default class BoardController {
       return;
     }
 
-    const newTasks = this._renderTasks(this._taskBoardComponent, this._tasks.slice(0, START_NUMBER_TASKS), this._onDataChange);
+    const newTasks = this._renderTasks(this._taskBoardComponent, this._tasks.slice(0, START_NUMBER_TASKS), this._onDataChange, this._onChangeView);
     this._showingTaskControllers = this._showingTaskControllers.concat(newTasks);
     this._renderLoadMoreButton();
     this._sorting.setSortTypeChangeHandler(this._onChangeSortType);
