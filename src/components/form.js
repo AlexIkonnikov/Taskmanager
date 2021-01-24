@@ -124,6 +124,7 @@ export default class Form extends SmartComponent {
     super();
     this._task = task;
     this._isRepeating = task.isRepeating;
+    this._dueDate = task.dueDate;
     this._submitHandler = null;
     this._flatpickr = null;
     this._setFlatpickr();
@@ -149,6 +150,7 @@ export default class Form extends SmartComponent {
   reset() {
     const task = this._task;
     task.isRepeating = !!this._isRepeating;
+    task.dueDate = !!this._dueDate;
   }
 
   rerender() {

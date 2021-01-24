@@ -1,4 +1,4 @@
-import {formatTime} from '../utils/common';
+import {formatTime, formatDate} from '../utils/common';
 import {mounths} from '../mock/task';
 import AbstractComponent from './abstract-component';
 
@@ -6,7 +6,7 @@ const COUNT_CARTS = 20;
 const returnCartMarkup = (tasks) => {
   const {id, discription, dueDate, color, isArchive, isFavorite, isRepeating, isDateSet} = tasks;
   const isDateShowing = !!dueDate && !isRepeating;
-  const date = isDateShowing ? `${dueDate.getDate()} ${mounths[dueDate.getMonth()]}` : ``;
+  const date = isDateShowing ? formatDate(dueDate) : ``;
   const time = isDateShowing ? formatTime(dueDate) : ``;
   const deadLineClass = dueDate && dueDate < Date.now() && !isRepeating ? `card--deadline` : ``;
   const disabledClass = `card__btn--disabled`;

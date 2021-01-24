@@ -1,14 +1,11 @@
-const customTimeFormat = (value) => {
-
-  return value < 10 ? `0${value}` : value;
-};
+import moment from 'moment';
 
 const formatTime = (date) => {
-
-  const hours = customTimeFormat(date.getHours() % 12);
-  const minutes = customTimeFormat(date.getMinutes());
-
-  return `${hours}:${minutes}`;
+  return moment(date).format(`hh:mm`);
 };
 
-export {formatTime};
+const formatDate = (date) => {
+  return moment(date).format(`DD MMMM`);
+}
+
+export {formatTime, formatDate};
