@@ -1,6 +1,8 @@
 import {colors, mounths, days} from '../mock/task';
 import {formatTime} from '../utils/common';
 import SmartComponent from './smart';
+import flatpickr from 'flatpickr';
+import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 
 const returnFormMarkup = (task) => {
   const {discription, dueDate, color, repeatingDays, isRepeating, isDateSet} = task;
@@ -121,12 +123,37 @@ export default class Form extends SmartComponent {
   constructor(task) {
     super();
     this._task = task;
+    this._isRepeating = task.isRepeating;
     this._submitHandler = null;
+    this._flatpickr = null;
+    this._setFlatpickr();
     this.subscribeOnEvents();
+  }
+
+  _setFlatpickr() {
+
+    if (this._flatpickr) {
+      this._flatpickr.destroy();
+      this._flatpickr = null;
+    }
+
+    if (this._task.isDateSet && !this._task.isRepeating) {
+      const calendar = this.getElement().querySelector(`.card__date`);
+      this._flatpickr = flatpickr(calendar, {
+        enableTime: true,
+        dateFormat: "d F H:i",
+      });
+    }
+  }
+
+  reset() {
+    const task = this._task;
+    task.isRepeating = !!this._isRepeating;
   }
 
   rerender() {
     super.rerender();
+    this._setFlatpickr();
   }
 
   getMarkup() {

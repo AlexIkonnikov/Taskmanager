@@ -37,6 +37,7 @@ export default class TaskController {
 
   onEscDown(evt) {
     if (evt.keyCode === 27) {
+      this._formComponent.reset();
       this.replaceFormToCart(evt);
       document.removeEventListener(`keydown`, this.onEscDown);
     }
