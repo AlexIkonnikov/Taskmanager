@@ -33,6 +33,7 @@ export default class TaskController {
     evt.preventDefault();
     this._mode = MODE.DEFAULT;
     replace(this._taskComponent, this._formComponent);
+    document.removeEventListener(`keydown`, this.onEscDown);
   }
 
   onEscDown(evt) {
@@ -52,7 +53,6 @@ export default class TaskController {
 
   render(task) {
     let oldTaskComponent = this._taskComponent;
-    let oldFormComponent = this._formComponent;
     this._taskComponent = new Task(task);
     this._formComponent = new Form(task);
 
@@ -67,9 +67,8 @@ export default class TaskController {
       this._onDataChange(this, task, Object.assign({}, task, {isFavorite: !task.isFavorite}));
     });
 
-    if (oldTaskComponent && oldFormComponent) {
+    if (oldTaskComponent) {
       replace(this._taskComponent, oldTaskComponent);
-      replace(this._formComponent, oldFormComponent);
     } else {
       render(this._container.getElement(), this._taskComponent);
     }

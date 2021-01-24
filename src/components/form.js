@@ -1,5 +1,5 @@
-import {colors, mounths, days} from '../mock/task';
-import {formatTime} from '../utils/common';
+import {colors, days} from '../mock/task';
+import {formatTime, formatDate} from '../utils/common';
 import SmartComponent from './smart';
 import flatpickr from 'flatpickr';
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
@@ -8,7 +8,7 @@ const returnFormMarkup = (task) => {
   const {discription, dueDate, color, repeatingDays, isRepeating, isDateSet} = task;
   const repeatingClass = isRepeating ? `card--repeat` : ``;
   const isDateShowing = !!dueDate && !isRepeating;
-  const date = isDateShowing ? `${dueDate.getDate()} ${mounths[dueDate.getMonth()]}` : ``;
+  const date = isDateShowing ? formatDate(dueDate) : ``;
   const time = isDateShowing ? formatTime(dueDate) : ``;
   const deadLineClass = dueDate && dueDate < Date.now() && !isRepeating ? `card--deadline` : ``;
 
@@ -123,13 +123,34 @@ export default class Form extends SmartComponent {
   constructor(task) {
     super();
     this._task = task;
-    this._isRepeating = task.isRepeating;
-    this._dueDate = task.dueDate;
+    this._isRepeating = this._task.isRepeating;
+    this._dueDate = this._task.dueDate;
+    this._repeatingDays = this._task.repeatingDays;
+    this._days = [];
     this._submitHandler = null;
     this._flatpickr = null;
-    this._setFlatpickr();
+
     this.subscribeOnEvents();
+    this._setFlatpickr();
+    this._isButtonDesabled();
   }
+
+  _isButtonDesabled() {
+    if (this._task.isRepeating === false) {
+      return;
+    }
+
+    const button = this.getElement().querySelector(`.card__save`);
+    button.setAttribute(`disabled`, true);
+    this._days = this.getElement().querySelectorAll(`.card__repeat-day-input`);
+
+    this._days.forEach((day) => {
+      if(day.checked) {
+        button.removeAttribute(`disabled`);
+      }
+    });
+  }
+
 
   _setFlatpickr() {
 
@@ -148,14 +169,14 @@ export default class Form extends SmartComponent {
   }
 
   reset() {
-    const task = this._task;
-    task.isRepeating = !!this._isRepeating;
-    task.dueDate = !!this._dueDate;
+    this._task.isRepeating = !!this._isRepeating;
+    this._task.dueDate = !!this._dueDate;
   }
 
   rerender() {
     super.rerender();
     this._setFlatpickr();
+    this._isButtonDesabled();
   }
 
   getMarkup() {
@@ -180,9 +201,16 @@ export default class Form extends SmartComponent {
       this.rerender();
     });
 
-    element.querySelectorAll(`.card__color-input`).forEach((it) => {
-      it.addEventListener(`change`, (evt) => {
+    element.querySelectorAll(`.card__color-input`).forEach((color) => {
+      color.addEventListener(`change`, (evt) => {
         this._task.color = evt.target.value;
+        this.rerender();
+      });
+    });
+
+    element.querySelectorAll(`.card__repeat-day-input`).forEach((day) => {
+      day.addEventListener(`change`, (evt) => {
+        this._repeatingDays[evt.target.value] = !this._repeatingDays[evt.target.value];
         this.rerender();
       });
     });
