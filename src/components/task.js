@@ -1,5 +1,4 @@
 import {formatTime, formatDate} from '../utils/common';
-import {mounths} from '../mock/task';
 import AbstractComponent from './abstract-component';
 
 const COUNT_CARTS = 20;
