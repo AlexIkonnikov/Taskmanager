@@ -42,7 +42,7 @@ const generateTask = () => {
     isDateSet: dueDate instanceof Date,
     isArchive: Math.random() > 0.5,
     isFavorite: Math.random() > 0.5,
-    isRepeating: Object.values(repeatingDays).some(Boolean),
+    isRepeating: Object.values(repeatingDays).some(Boolean) && !dueDate,
   };
 };
 
