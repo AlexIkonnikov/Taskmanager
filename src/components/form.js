@@ -126,13 +126,22 @@ export default class Form extends SmartComponent {
     this._isRepeating = this._task.isRepeating;
     this._dueDate = this._task.dueDate;
     this._repeatingDays = this._task.repeatingDays;
-    this._submitButton = this.getElement().querySelector(`.card__save`);
     this._submitHandler = null;
     this._flatpickr = null;
 
     this.subscribeOnEvents();
     this._setFlatpickr();
     this._validateRepeatStatus();
+    this._validateDateSet();
+  }
+
+  _validateDateSet() {
+    const button = this.getElement().querySelector(`.card__save`);
+    if (!this._task.isRepeating && this.getElement().querySelector(`.card__date`) && this.getElement().querySelector(`.card__date`).value === ` `) {
+      button.disabled = true;
+    } else {
+      button.disabled = false;
+    }
   }
 
   _validateRepeatStatus() {
@@ -170,6 +179,7 @@ export default class Form extends SmartComponent {
   rerender() {
     super.rerender();
     this._setFlatpickr();
+    this._validateDateSet();
     this._validateRepeatStatus();
   }
 
