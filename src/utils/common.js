@@ -6,6 +6,6 @@ const formatTime = (date) => {
 
 const formatDate = (date) => {
   return moment(date).format(`DD MMMM`);
-}
+};
 
 export {formatTime, formatDate};

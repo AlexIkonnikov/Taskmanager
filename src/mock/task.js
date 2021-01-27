@@ -29,7 +29,7 @@ let i = 0;
 const generateId = () => {
   i++;
   return i;
-}
+};
 
 const generateTask = () => {
   const dueDate = Math.random() > 0.5 ? null : generateRandomDate();

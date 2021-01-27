@@ -2,7 +2,7 @@ import Tasks from "../components/tasks";
 import Sorting, {SortType} from '../components/sorting.js';
 import Button from '../components/button.js';
 import NoTaskView from '../components/no-task';
-import {render, replace, remove} from '../utils/render';
+import {render, remove} from '../utils/render';
 import TaskController from './task';
 
 let START_NUMBER_TASKS = 8;

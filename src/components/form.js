@@ -166,7 +166,7 @@ export default class Form extends SmartComponent {
       const calendar = this.getElement().querySelector(`.card__date`);
       this._flatpickr = flatpickr(calendar, {
         enableTime: true,
-        dateFormat: "d F H:i",
+        dateFormat: `d F H:i`,
       });
     }
   }
