@@ -123,6 +123,7 @@ export default class Form extends SmartComponent {
   constructor(task) {
     super();
     this._task = task;
+    this._task.isDateSet = this._task.dueDate instanceof Date;
     this._isRepeating = this._task.isRepeating;
     this._dueDate = this._task.dueDate;
     this._repeatingDays = this._task.repeatingDays;
@@ -167,6 +168,10 @@ export default class Form extends SmartComponent {
       this._flatpickr = flatpickr(calendar, {
         enableTime: true,
         dateFormat: `d F H:i`,
+      });
+      this._flatpickr.config.onChange.push((selectedDates) => {
+        this._task.dueDate = selectedDates[0];
+        this.rerender();
       });
     }
   }

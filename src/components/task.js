@@ -62,6 +62,7 @@ export default class Task extends AbstractComponent {
   constructor(task) {
     super();
     this._task = task;
+    this._task.isDateSet = this._task.dueDate instanceof Date;
   }
 
   getMarkup() {

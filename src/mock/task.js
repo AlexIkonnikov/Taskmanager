@@ -39,7 +39,6 @@ const generateTask = () => {
     dueDate,
     color: colors[Math.floor(Math.random() * colors.length)],
     repeatingDays,
-    isDateSet: dueDate instanceof Date,
     isArchive: Math.random() > 0.5,
     isFavorite: Math.random() > 0.5,
     isRepeating: Object.values(repeatingDays).some(Boolean) && !dueDate,
