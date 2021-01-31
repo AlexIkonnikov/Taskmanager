@@ -9,9 +9,10 @@ let START_NUMBER_TASKS = 8;
 let AFTER_CLICK_NUMBER_TASK = 8;
 
 export default class BoardController {
-  constructor(container) {
+  constructor(container, taskModel) {
     this._container = container;
 
+    this._taskModel = taskModel;
     this._startNumberTasks = 8;
     this._showingTaskControllers = [];
     this._noTasksComponent = new NoTaskView();
@@ -36,35 +37,38 @@ export default class BoardController {
   }
 
   _renderLoadMoreButton() {
-    if (START_NUMBER_TASKS >= this._tasks.length) {
+    const tasks = this._taskModel.getTasks();
+    if (START_NUMBER_TASKS >= tasks.length) {
       return;
     }
 
     render(this._container, this._loadMoreButton);
     this._loadMoreButton.setClickHandler(() => {
-
-      const newTasks = this._renderTasks(this._taskBoardComponent, this._tasks.slice(START_NUMBER_TASKS, START_NUMBER_TASKS + AFTER_CLICK_NUMBER_TASK), this._onDataChange, this._onChangeView);
+      const sortedTasks = this._makeSorted(tasks, this._sorting.getSortType());
+      const newTasks = this._renderTasks(this._taskBoardComponent, sortedTasks.slice(START_NUMBER_TASKS, START_NUMBER_TASKS + AFTER_CLICK_NUMBER_TASK), this._onDataChange, this._onChangeView);
       this._showingTaskControllers = this._showingTaskControllers.concat(newTasks);
 
       START_NUMBER_TASKS += AFTER_CLICK_NUMBER_TASK;
-      if (START_NUMBER_TASKS >= this._tasks.length) {
+      if (START_NUMBER_TASKS >= tasks.length) {
         remove(this._loadMoreButton);
       }
     });
   }
 
-  _makeSorted(sortType) {
+  _makeSorted(tasks, sortType) {
+    let sortedTasks = tasks.slice();
     switch (sortType) {
       case SortType.DATE_UP:
-        this._tasks.sort((a, b) => a.dueDate - b.dueDate);
+        sortedTasks = this._taskModel.getTasks().slice().sort((a, b) => a.dueDate - b.dueDate);
         break;
       case SortType.DATE_DOWN:
-        this._tasks.sort((a, b) => b.dueDate - a.dueDate);
+        sortedTasks = this._taskModel.getTasks().slice().sort((a, b) => b.dueDate - a.dueDate);
         break;
       default:
-        this._tasks = this._originTasks.slice();
+        sortedTasks = this._taskModel.getTasks();
         break;
     }
+    return sortedTasks;
   }
 
   _onChangeSortType(sortType) {
@@ -72,8 +76,8 @@ export default class BoardController {
     remove(this._loadMoreButton);
     this._renderLoadMoreButton();
     this._taskBoardComponent.getElement().innerHTML = ``;
-    this._makeSorted(sortType);
-    const newTasks = this._renderTasks(this._taskBoardComponent, this._tasks.slice(0, START_NUMBER_TASKS), this._onDataChange, this._onChangeView);
+    const sortedTasks = this._makeSorted(this._taskModel.getTasks(), sortType);
+    const newTasks = this._renderTasks(this._taskBoardComponent, sortedTasks.slice(0, START_NUMBER_TASKS), this._onDataChange, this._onChangeView);
     this._showingTaskControllers = newTasks;
   }
 
@@ -86,38 +90,28 @@ export default class BoardController {
   }
 
   _onDataChange(taskController, oldTask, newTask) {
-    const index = this._tasks.findIndex((it) => it === oldTask);
-    if (index === -1) {
-      return;
+    const isSuccses = this._taskModel.updateTask(oldTask.id, newTask);
+    if (isSuccses) {
+      taskController.render(newTask);
     }
-
-    const originIndex = this._originTasks.findIndex((it) => it === oldTask);
-
-    if (originIndex !== -1 ) {
-      this._originTasks = [].concat(this._originTasks.slice(0, originIndex), newTask, this._originTasks.slice(originIndex + 1));
-    }
-
-    this._tasks = [].concat(this._tasks.slice(0, index), newTask, this._tasks.slice(index + 1));
-    taskController.render(this._tasks[index]);
   }
 
   _onChangeView() {
     this._showingTaskControllers.forEach((it) => it.setDefaultView());
   }
 
-  render(tasks) {
-    this._tasks = tasks;
-    this._originTasks = tasks.slice();
+  render() {
+    const tasks = this._taskModel.getTasks();
     this._renderSorting();
     this._renderBoard();
 
-    const isAllTaskArchived = this._tasks.every((task) => task.isArchived);
+    const isAllTaskArchived = tasks.every((task) => task.isArchived);
     if (isAllTaskArchived) {
       this._renderNoTaskComponent();
       return;
     }
 
-    const newTasks = this._renderTasks(this._taskBoardComponent, this._tasks.slice(0, START_NUMBER_TASKS), this._onDataChange, this._onChangeView);
+    const newTasks = this._renderTasks(this._taskBoardComponent, tasks.slice(0, START_NUMBER_TASKS), this._onDataChange, this._onChangeView);
     this._showingTaskControllers = this._showingTaskControllers.concat(newTasks);
     this._renderLoadMoreButton();
     this._sorting.setSortTypeChangeHandler(this._onChangeSortType);

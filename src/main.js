@@ -6,6 +6,7 @@ import BoardController from './controllers/board';
 import {generateFilters} from './mock/filter.js';
 import {generateTasks} from './mock/task.js';
 import {render} from './utils/render';
+import Tasks from './models/tasks';
 
 const tasks = generateTasks(COUNT_CARTS);
 const filters = generateFilters(tasks);
@@ -16,7 +17,9 @@ render(poolForMenu, new Menu());
 render(mainPool, new Filter(filters));
 
 const board = new Board();
-const boardContreller = new BoardController(board.getElement());
+const tasksModel = new Tasks();
+tasksModel.setTasks(tasks)
+const boardContreller = new BoardController(board.getElement(), tasksModel);
 
 render(mainPool, board);
-boardContreller.render(tasks);
+boardContreller.render();

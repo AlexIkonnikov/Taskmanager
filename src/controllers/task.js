@@ -1,4 +1,4 @@
-import {render, replace} from '../utils/render';
+import {remove, render, replace} from '../utils/render';
 import Form from '../components/form.js';
 import Task from '../components/task.js';
 
@@ -69,6 +69,7 @@ export default class TaskController {
 
     if (oldTaskComponent) {
       replace(this._taskComponent, oldTaskComponent);
+      remove(oldTaskComponent);
     } else {
       render(this._container.getElement(), this._taskComponent);
     }
