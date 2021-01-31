@@ -90,6 +90,13 @@ export default class BoardController {
     if (index === -1) {
       return;
     }
+
+    const originIndex = this._originTasks.findIndex((it) => it === oldTask);
+
+    if (originIndex !== -1 ) {
+      this._originTasks = [].concat(this._originTasks.slice(0, originIndex), newTask, this._originTasks.slice(originIndex + 1));
+    }
+
     this._tasks = [].concat(this._tasks.slice(0, index), newTask, this._tasks.slice(index + 1));
     taskController.render(this._tasks[index]);
   }
