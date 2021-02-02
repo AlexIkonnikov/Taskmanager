@@ -15,7 +15,45 @@ export default class Tasks {
   }
 
   getFilterTasks() {
-
+    let date = new Date();
+    const filterTasks = [];
+    switch (this._filtertype) {
+      case FILTERTYPE.Overdue: {
+        filterTasks = this._tasks.filter((task) => {
+          task.dueDate && (task.dueDate.getFullYear() < date.getFullYear() || task.dueDate.getMonth() < date.getMonth() || task.dueDate.getDate() < date.getDate())
+        });
+        break;
+      }
+      case FILTERTYPE.Today: {
+        filterTasks = this._tasks.filter((task) => {
+          task.dueDate && task.dueDate.getFullYear() === date.getFullYear() && task.dueDate.getMonth() === date.getMonth() && task.dueDate.getDate() === date.getDate();
+        });
+        break;
+      }
+      case FILTERTYPE.Favorites: {
+        filterTasks = this._tasks.filter((task) => {
+          task.isFavorite === true;
+        });
+        break;
+      }
+      case FILTERTYPE.Repeating: {
+        filterTasks = this._tasks.filter((task) => {
+          task.isRepeating === true;
+        });
+        break;
+      }
+      case FILTERTYPE.Archive: {
+        filterTasks = this._tasks.filter((task) => {
+          task.isArchive === true;
+        });
+        break;
+      }
+      case FILTERTYPE.All: {
+        filterTasks = this._tasks;
+        break;
+      }
+    }
+    return filterTasks;
   }
 
   getAllTasks() {
