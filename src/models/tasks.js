@@ -1,11 +1,24 @@
+const FILTERTYPE = {
+  All: `all`,
+  Overdue: `overdue`,
+  Today: `today`,
+  Favorites: `favorites`,
+  Repeating: `repeating`,
+  Archive: `archive`,
+}
 
 export default class Tasks {
   constructor() {
     this._tasks = [];
     this._dataChangeHandler = [];
+    this._filtertype = FILTERTYPE.All;
   }
 
-  getTasks() {
+  getFilterTasks() {
+
+  }
+
+  getAllTasks() {
     return this._tasks;
   }
 

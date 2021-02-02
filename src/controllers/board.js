@@ -37,7 +37,7 @@ export default class BoardController {
   }
 
   _renderLoadMoreButton() {
-    const tasks = this._taskModel.getTasks();
+    const tasks = this._taskModel.getAllTasks();
     if (START_NUMBER_TASKS >= tasks.length) {
       return;
     }
@@ -59,13 +59,13 @@ export default class BoardController {
     let sortedTasks = tasks.slice();
     switch (sortType) {
       case SortType.DATE_UP:
-        sortedTasks = this._taskModel.getTasks().slice().sort((a, b) => a.dueDate - b.dueDate);
+        sortedTasks = this._taskModel.getAllTasks().slice().sort((a, b) => a.dueDate - b.dueDate);
         break;
       case SortType.DATE_DOWN:
-        sortedTasks = this._taskModel.getTasks().slice().sort((a, b) => b.dueDate - a.dueDate);
+        sortedTasks = this._taskModel.getAllTasks().slice().sort((a, b) => b.dueDate - a.dueDate);
         break;
       default:
-        sortedTasks = this._taskModel.getTasks();
+        sortedTasks = this._taskModel.getAllTasks();
         break;
     }
     return sortedTasks;
@@ -76,7 +76,7 @@ export default class BoardController {
     remove(this._loadMoreButton);
     this._renderLoadMoreButton();
     this._taskBoardComponent.getElement().innerHTML = ``;
-    const sortedTasks = this._makeSorted(this._taskModel.getTasks(), sortType);
+    const sortedTasks = this._makeSorted(this._taskModel.getAllTasks(), sortType);
     const newTasks = this._renderTasks(this._taskBoardComponent, sortedTasks.slice(0, START_NUMBER_TASKS), this._onDataChange, this._onChangeView);
     this._showingTaskControllers = newTasks;
   }
@@ -101,7 +101,7 @@ export default class BoardController {
   }
 
   render() {
-    const tasks = this._taskModel.getTasks();
+    const tasks = this._taskModel.getAllTasks();
     this._renderSorting();
     this._renderBoard();
 
