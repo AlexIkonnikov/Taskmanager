@@ -12,45 +12,57 @@ export default class Tasks {
     this._tasks = [];
     this._dataChangeHandler = [];
     this._filtertype = FILTERTYPE.All;
+    this._filterChangeHandler;
+  }
+
+  setFilterTypeChangeHandler(cb) {
+    this._filterChangeHandler = cb;
+  }
+
+  changeFilter() {
+    this._filterChangeHandler();
+  }
+
+  getFilterType() {
+    return this._filtertype;
   }
 
   getFilterTasks() {
     let date = new Date();
-    const filterTasks = [];
+    let filterTasks = [];
     switch (this._filtertype) {
       case FILTERTYPE.Overdue: {
         filterTasks = this._tasks.filter((task) => {
-          task.dueDate && (task.dueDate.getFullYear() < date.getFullYear() || task.dueDate.getMonth() < date.getMonth() || task.dueDate.getDate() < date.getDate())
+          return task.dueDate && (task.dueDate.getFullYear() < date.getFullYear() || task.dueDate.getMonth() < date.getMonth() || task.dueDate.getDate() < date.getDate())
         });
         break;
       }
       case FILTERTYPE.Today: {
         filterTasks = this._tasks.filter((task) => {
-          task.dueDate && task.dueDate.getFullYear() === date.getFullYear() && task.dueDate.getMonth() === date.getMonth() && task.dueDate.getDate() === date.getDate();
+          return task.dueDate && task.dueDate.getFullYear() === date.getFullYear() && task.dueDate.getMonth() === date.getMonth() && task.dueDate.getDate() === date.getDate();
         });
         break;
       }
       case FILTERTYPE.Favorites: {
         filterTasks = this._tasks.filter((task) => {
-          task.isFavorite === true;
+          return task.isFavorite === true;
         });
         break;
       }
       case FILTERTYPE.Repeating: {
         filterTasks = this._tasks.filter((task) => {
-          task.isRepeating === true;
+          return task.isRepeating === true;
         });
         break;
       }
       case FILTERTYPE.Archive: {
         filterTasks = this._tasks.filter((task) => {
-          task.isArchive === true;
+          return task.isArchive === true;
         });
         break;
       }
       case FILTERTYPE.All: {
-        filterTasks = this._tasks;
-        break;
+        return filterTasks = this._tasks;
       }
     }
     return filterTasks;

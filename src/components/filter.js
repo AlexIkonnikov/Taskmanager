@@ -8,6 +8,7 @@ const returnFilterMarkup = (filter, isChecked) => {
     id="filter__${name}"
     class="filter__input visually-hidden"
     name="filter"
+    data-type="${name}"
     ${count === 0 ? `disabled` : ``}
     ${isChecked ? `checked` : ``}
     />
@@ -34,5 +35,9 @@ export default class Filter extends AbstractComponent {
 
   getMarkup() {
     return returnFiltersMarkup(this._filter);
+  }
+
+  setChangeFilter(cb) {
+    this.getElement().addEventListener(`change`, cb);
   }
 }
