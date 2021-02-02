@@ -38,7 +38,14 @@ export default class BoardController {
   }
 
   _renderLoadMoreButton() {
-    const tasks = this._taskModel.getAllTasks();
+    //const tasks = this._taskModel.getAllTasks();
+    let tasks = [];
+    if (this._taskModel.getFilterType() === `all`) {
+      tasks = this._taskModel.getAllTasks();
+    } else {
+      tasks = this._taskModel.getFilterTasks();
+    }
+
     if (START_NUMBER_TASKS >= tasks.length) {
       return;
     }
@@ -50,8 +57,7 @@ export default class BoardController {
         const newTasks = this._renderTasks(this._taskBoardComponent, sortedTasks.slice(START_NUMBER_TASKS, START_NUMBER_TASKS + AFTER_CLICK_NUMBER_TASK), this._onDataChange, this._onChangeView);
         this._showingTaskControllers = this._showingTaskControllers.concat(newTasks);
       } else {
-        const filterTasks = this._taskModel.getFilterTasks();
-        const newTasks = this._renderTasks(this._taskBoardComponent, filterTasks.slice(START_NUMBER_TASKS, START_NUMBER_TASKS + AFTER_CLICK_NUMBER_TASK), this._onDataChange, this._onChangeView);
+        const newTasks = this._renderTasks(this._taskBoardComponent, tasks.slice(START_NUMBER_TASKS, START_NUMBER_TASKS + AFTER_CLICK_NUMBER_TASK), this._onDataChange, this._onChangeView);
         this._showingTaskControllers = this._showingTaskControllers.concat(newTasks);
       }
 
@@ -96,7 +102,8 @@ export default class BoardController {
       this._renderLoadMoreButton();
     }
     this._taskBoardComponent.getElement().innerHTML = ``;
-    this._renderTasks(this._taskBoardComponent, filterTasks.slice(0, START_NUMBER_TASKS), this._onDataChange, this._onChangeView);
+    const newTasks = this._renderTasks(this._taskBoardComponent, filterTasks.slice(0, START_NUMBER_TASKS), this._onDataChange, this._onChangeView);
+    this._showingTaskControllers = newTasks;
   }
 
   _renderTasks(placeToCarts, tasks, onDataChange, onViewChange) {

@@ -19,7 +19,7 @@ export default class Tasks {
     this._filterChangeHandler = cb;
   }
 
-  changeFilter() {
+  changeActiveFilter() {
     this._filterChangeHandler();
   }
 

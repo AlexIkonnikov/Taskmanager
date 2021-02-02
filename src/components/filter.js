@@ -1,4 +1,4 @@
-import AbstractComponent from './abstract-component';
+import SmartComponent from './smart';
 
 const returnFilterMarkup = (filter, isChecked) => {
   const {name, count} = filter;
@@ -27,17 +27,30 @@ const returnFiltersMarkup = (filter) => {
   );
 };
 
-export default class Filter extends AbstractComponent {
-  constructor(filter) {
+export default class Filter extends SmartComponent {
+  constructor(filter, taskModel) {
     super();
     this._filter = filter;
+    this._taskModel = taskModel;
+  }
+
+  rerender() {
+    super.rerender();
+  }
+
+  recoveryListners() {
+    this.setChangeFilter();
   }
 
   getMarkup() {
     return returnFiltersMarkup(this._filter);
   }
 
-  setChangeFilter(cb) {
-    this.getElement().addEventListener(`change`, cb);
+  setChangeFilterHandler() {
+    this.getElement().addEventListener(`change`, (evt) => {
+      this._taskModel._filtertype = evt.target.dataset.type;
+      this._taskModel.changeActiveFilter();
+      this.rerender();
+    });
   }
 }

@@ -8,12 +8,8 @@ export default class FilterController {
   }
 
   render(filters) {
-    const filter = new Filter(filters);
-
-    filter.setChangeFilter((evt) => {
-      this._taskModel._filtertype = evt.target.dataset.type;
-      this._taskModel.changeFilter();
-    });
+    const filter = new Filter(filters, this._taskModel);
+    filter.setChangeFilterHandler();
     render(this._container, filter);
   }
 }
