@@ -37,8 +37,7 @@ export default class BoardController {
     render(this._taskBoardComponent.getElement(), this._noTasksComponent);
   }
 
-  _renderLoadMoreButton() {
-    //const tasks = this._taskModel.getAllTasks();
+  _renderLoadMoreButton() {;
     let tasks = [];
     if (this._taskModel.getFilterType() === `all`) {
       tasks = this._taskModel.getAllTasks();
@@ -118,6 +117,10 @@ export default class BoardController {
     const isSuccses = this._taskModel.updateTask(oldTask.id, newTask);
     if (isSuccses) {
       taskController.render(newTask);
+    } else {
+      remove(taskController._taskComponent);
+      remove(taskController._formComponent);
+      this._taskModel._changeDataHandler();
     }
   }
 

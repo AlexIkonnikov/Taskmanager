@@ -1,4 +1,5 @@
 import SmartComponent from './smart';
+import {generateFilters} from '../mock/filter';
 
 const returnFilterMarkup = (filter, isChecked) => {
   const {name, count} = filter;
@@ -18,8 +19,8 @@ const returnFilterMarkup = (filter, isChecked) => {
   );
 };
 
-const returnFiltersMarkup = (filter) => {
-  const filterMarkup = filter.map((it, i) => returnFilterMarkup(it, i === 0)).join(`\n`);
+const returnFiltersMarkup = (filters) => {
+  const filterMarkup = filters.map((it, i) => returnFilterMarkup(it, i === 0)).join(`\n`);
   return (
     `<section class="main__filter filter container">
     ${filterMarkup}
@@ -28,10 +29,14 @@ const returnFiltersMarkup = (filter) => {
 };
 
 export default class Filter extends SmartComponent {
-  constructor(filter, taskModel) {
+  constructor(taskModel) {
     super();
-    this._filter = filter;
     this._taskModel = taskModel;
+    this.rerender = this.rerender.bind(this);
+  }
+
+  getFilterInfo() {
+    return generateFilters(this._taskModel.getAllTasks());
   }
 
   rerender() {
@@ -39,18 +44,18 @@ export default class Filter extends SmartComponent {
   }
 
   recoveryListners() {
-    this.setChangeFilter();
+    this.setChangeFilterHandler();
   }
 
   getMarkup() {
-    return returnFiltersMarkup(this._filter);
+    return returnFiltersMarkup(this.getFilterInfo());
   }
 
   setChangeFilterHandler() {
-    this.getElement().addEventListener(`change`, (evt) => {
-      this._taskModel._filtertype = evt.target.dataset.type;
-      this._taskModel.changeActiveFilter();
-      this.rerender();
+    this.getElement().querySelectorAll(`input`).forEach((it) => {
+      it.addEventListener(`change`, (evt) => {
+        this._taskModel.changeActiveFilter(evt.target.dataset.type);
+      });
     });
   }
 }

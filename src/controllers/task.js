@@ -67,6 +67,10 @@ export default class TaskController {
       this._onDataChange(this, task, Object.assign({}, task, {isFavorite: !task.isFavorite}));
     });
 
+    this._formComponent.setDeleteHandler(() => {
+      this._onDataChange(this, task, null);
+    });
+
     if (oldTaskComponent) {
       replace(this._taskComponent, oldTaskComponent);
       remove(oldTaskComponent);

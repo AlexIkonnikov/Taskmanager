@@ -225,6 +225,10 @@ export default class Form extends SmartComponent {
     });
   }
 
+  setDeleteHandler(cb) {
+    this.getElement().querySelector(`.card__delete`).addEventListener(`click`, cb);
+  }
+
   setSubmitHandler(cb) {
     this.getElement().querySelector(`form`).addEventListener(`submit`, cb);
     this._submitHandler = cb;

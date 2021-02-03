@@ -13,13 +13,26 @@ export default class Tasks {
     this._dataChangeHandler = [];
     this._filtertype = FILTERTYPE.All;
     this._filterChangeHandler;
+    this._changeDataHandler;
+  }
+
+  deleteTask(id) {
+    const index = this._tasks.findIndex((task) => task.id === id)
+    if (index !== -1) {
+      this._tasks.splice(index, 1);
+    }
+  }
+
+  setChangeDataHandler(cb) {
+    this._changeDataHandler = cb;
   }
 
   setFilterTypeChangeHandler(cb) {
     this._filterChangeHandler = cb;
   }
 
-  changeActiveFilter() {
+  changeActiveFilter(value) {
+    this._filtertype = value;
     this._filterChangeHandler();
   }
 
@@ -78,6 +91,10 @@ export default class Tasks {
   }
 
   updateTask(id, task) {
+    if (task === null) {
+      this.deleteTask(id);
+      return false;
+    }
     const index = this._tasks.findIndex((task) => task.id === id);
 
     if (index === -1) {
@@ -85,6 +102,7 @@ export default class Tasks {
     }
 
     this._tasks = [].concat(this._tasks.slice(0, index), task, this._tasks.slice(index + 1));
+    this._changeDataHandler();
     return true;
   }
 
