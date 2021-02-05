@@ -1,4 +1,4 @@
-import {remove, render, replace} from '../utils/render';
+import {render} from '../utils/render';
 import Filter from '../components/filter';
 
 export default class FilterController {

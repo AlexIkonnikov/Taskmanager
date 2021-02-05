@@ -13,7 +13,9 @@ const poolForMenu = mainPool.querySelector(`.main__control`);
 const tasksModel = new Tasks();
 tasksModel.setTasks(tasks);
 
-render(poolForMenu, new Menu());
+const menu = new Menu();
+render(poolForMenu, menu);
+
 const filterController = new FilterController(mainPool, tasksModel);
 filterController.render();
 

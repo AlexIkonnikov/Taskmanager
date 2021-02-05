@@ -205,6 +205,10 @@ export default class Form extends SmartComponent {
       this.rerender();
     });
 
+    element.querySelector(`.card__text`).addEventListener(`change`, (evt) => {
+      this._task.discription = evt.target.value;
+    });
+
     element.querySelector(`.card__date-deadline-toggle`).addEventListener(`click`, () => {
       this._task.isDateSet = !this._task.isDateSet;
       this.rerender();

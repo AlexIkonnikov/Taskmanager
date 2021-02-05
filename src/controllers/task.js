@@ -32,6 +32,7 @@ export default class TaskController {
   replaceFormToCart(evt) {
     evt.preventDefault();
     this._mode = MODE.DEFAULT;
+    this._onDataChange(this, this._taskComponent, Object.assign({}, this._taskComponent));
     replace(this._taskComponent, this._formComponent);
     document.removeEventListener(`keydown`, this.onEscDown);
   }
@@ -49,6 +50,10 @@ export default class TaskController {
       this._mode = MODE.DEFAULT;
       replace(this._taskComponent, this._formComponent);
     }
+  }
+
+  showCreateTaskForm() {
+    render(this._container.getElement(), this._formComponent, `afterbegin`);
   }
 
   render(task) {

@@ -1,7 +1,7 @@
 import {formatTime, formatDate} from '../utils/common';
 import AbstractComponent from './abstract-component';
 
-const COUNT_CARTS = 20;
+const COUNT_CARTS = 15;
 const returnCartMarkup = (tasks) => {
   const {id, discription, dueDate, color, isArchive, isFavorite, isRepeating, isDateSet} = tasks;
   const isDateShowing = !!dueDate && !isRepeating;

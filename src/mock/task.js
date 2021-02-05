@@ -51,4 +51,15 @@ const generateTasks = (count) => {
   .map(generateTask);
 };
 
-export {generateTasks, generateTask, colors, mounths, days};
+const defaultTask = {
+  id: generateId(20),
+  discription: 'New task',
+  dueDate: new Date(),
+  color: `black`,
+  repeatingDays,
+  isArchive: false,
+  isFavorite: false,
+  isRepeating: Object.values(repeatingDays).some(Boolean),
+};
+
+export {generateTasks, generateTask, colors, mounths, days, defaultTask};

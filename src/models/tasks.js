@@ -16,6 +16,10 @@ export default class Tasks {
     this._changeDataHandler;
   }
 
+  _addTask(task) {
+    this._tasks.push(task);
+  }
+
   deleteTask(id) {
     const index = this._tasks.findIndex((task) => task.id === id)
     if (index !== -1) {
@@ -90,12 +94,16 @@ export default class Tasks {
     this._callHandlers(this._dataChangeHandler);
   }
 
-  updateTask(id, task) {
+  updateTask(oldTask, task) {
     if (task === null) {
-      this.deleteTask(id);
+      this.deleteTask(oldTask.id);
       return false;
     }
-    const index = this._tasks.findIndex((task) => task.id === id);
+    if (oldTask === null) {
+      this._addTask(task);
+      return false;
+    }
+    const index = this._tasks.findIndex((task) => task.id === oldTask.id);
 
     if (index === -1) {
       return;

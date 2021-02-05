@@ -37,4 +37,8 @@ export default class Menu extends AbstractComponent {
   getMarkup() {
     return returnMenuMarkup();
   }
+
+  setAddTaskHandler(cb) {
+    this.getElement().querySelector(`.control__label--new-task`).addEventListener(`click`, cb);
+  }
 }
